@@ -25,7 +25,7 @@ const directions = [
 let directionIndex = 0;
 
 const dateMin = new Date();
-const dateMax = new Date(2022, 10 - 1, 4);
+const dateMax = new Date(2022, 10 - 1, 1);
 
 const currentDate = new Date(dateMin.getTime());
 
@@ -155,7 +155,7 @@ const createWindow = async (): Promise<void> => {
 
       const direction = directions[directionIndex];
 
-      await sleep(1000);
+      await sleep(Math.round(5000 * Math.random() + 1000));
       findTickets(direction.from, direction.to, currentDate);
       return;
     }
@@ -181,7 +181,7 @@ const createWindow = async (): Promise<void> => {
     }
 
     const direction = directions[directionIndex];
-    await sleep(1000);
+    await sleep(Math.round(5000 * Math.random()) + 1000);
     findTickets(direction.from, direction.to, currentDate);
   });
 
