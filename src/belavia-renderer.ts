@@ -8,7 +8,7 @@ import { TicketsRequest } from "./TicketsRequest";
 
 declare const contracts: IBelaviaPreloadContracts;
 
-console.log(`👋 ! ${contracts.chrome()}`);
+console.log(`👋 Попробуем найти билетики!`);
 
 let snd: HTMLAudioElement | undefined;
 
@@ -38,7 +38,7 @@ function processApiResponse(url: string, requestData: Document | XMLHttpRequestB
 
         const tickets = ticketsResponse.unbundledOffers?.flat() ?? [];
 
-        console.log(`Found ${tickets.length} tickets`);
+        console.log(`Найдено билетов: ${tickets.length}`);
 
         contracts.onTickets(tickets.length);
 
