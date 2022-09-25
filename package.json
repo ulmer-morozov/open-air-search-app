@@ -52,16 +52,19 @@
               "config": "./webpack.renderer.config.js",
               "entryPoints": [
                 {
-                  "js": "./src/renderer.ts",
-                  "name": "main_window",
+                  "name": "belavia",
+                  "js": "./src/belavia-renderer.ts",
                   "preload": {
-                    "js": "./src/preload.ts"
+                    "js": "./src/belavia-preload.ts"
                   }
                 },
                 {
-                  "js": "./src/controls.ts",
+                  "name": "controls",
+                  "js": "./src/controls-renderer.ts",
                   "html": "./src/controls.html",
-                  "name": "controls"
+                  "preload": {
+                    "js": "./src/controls-preload.ts"
+                  }
                 }
               ]
             }

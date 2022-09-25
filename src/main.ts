@@ -9,8 +9,8 @@ const readFile = util.promisify(fs.readFile);
 // whether you're running in development or production).
 declare const CONTROLS_WEBPACK_ENTRY: string;
 
-declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
-declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
+declare const BELAVIA_WEBPACK_ENTRY: string;
+declare const BELAVIA_PRELOAD_WEBPACK_ENTRY: string;
 
 function sleep(time: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, time));
@@ -43,9 +43,6 @@ const createWindow = async (): Promise<void> => {
     width: 1200,
     height: 800,
     backgroundColor: '#444'
-    // webPreferences: {
-    //   preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY
-    // },
   });
 
   const controlsView = new BrowserView({
@@ -58,7 +55,7 @@ const createWindow = async (): Promise<void> => {
 
   const belaviaView = new BrowserView({
     webPreferences: {
-      preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY
+      preload: BELAVIA_PRELOAD_WEBPACK_ENTRY
     }
   });
 
@@ -72,19 +69,19 @@ const createWindow = async (): Promise<void> => {
 
   console.log(`CONTROLS_WEBPACK_ENTRY: ${CONTROLS_WEBPACK_ENTRY}`)
 
-  console.log(`MAIN_WINDOW_WEBPACK_ENTRY: ${MAIN_WINDOW_WEBPACK_ENTRY}`)
-  console.log(`MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: ${MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY}`)
+  console.log(`BELAVIA_WEBPACK_ENTRY: ${BELAVIA_WEBPACK_ENTRY}`)
+  console.log(`BELAVIA_PRELOAD_WEBPACK_ENTRY: ${BELAVIA_PRELOAD_WEBPACK_ENTRY}`)
 
-  mainWindow.on('page-title-updated', function (e) {
+  mainWindow.on('page-title-updated', (e) => {
     e.preventDefault();
   });
 
   belaviaView.webContents.on('did-finish-load', async () => {
     console.log('belaviaView did-finish-load');
 
-    if (MAIN_WINDOW_WEBPACK_ENTRY.startsWith('file://')) {
+    if (BELAVIA_WEBPACK_ENTRY.startsWith('file://')) {
       try {
-        const scriptDataBuffer = await readFile(MAIN_WINDOW_WEBPACK_ENTRY.replace('file://', ''));
+        const scriptDataBuffer = await readFile(BELAVIA_WEBPACK_ENTRY.replace('file://', ''));
         const scriptData = scriptDataBuffer.toString();
 
         console.log(scriptData);
@@ -110,7 +107,7 @@ const createWindow = async (): Promise<void> => {
         var po = document.createElement('script');
         po.type = 'text/javascript';
         po.async = true;
-        po.src = '${MAIN_WINDOW_WEBPACK_ENTRY}';
+        po.src = '${BELAVIA_WEBPACK_ENTRY}';
         var s = document.getElementsByTagName('script')[0];
         s.parentNode.insertBefore(po, s);
       })();

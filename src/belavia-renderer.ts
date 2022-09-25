@@ -1,3 +1,4 @@
+import { ApiError } from "./ApiError";
 import { IPreloadContracts } from "./IPreloadContracts";
 import { TicketResponse } from "./TicketResponse";
 import { TicketsRequest } from "./TicketsRequest";
