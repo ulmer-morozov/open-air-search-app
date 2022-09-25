@@ -52,14 +52,6 @@ const sendArgumentsMap = new Map();
 
 const proxiedSend = window.XMLHttpRequest.prototype.send;
 
-export interface ApiError {
-    status: string
-    type: string
-    errorCode: string
-    timeStamp: string
-    message: string
-}
-
 window.XMLHttpRequest.prototype.send = function (...sendArguments) {
     const request: XMLHttpRequest = this;
     const openArguments = openArgumentsMap.get(this);
