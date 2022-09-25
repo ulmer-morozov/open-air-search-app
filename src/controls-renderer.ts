@@ -31,6 +31,7 @@ MSQ TBS
  MSQ  KUT 
 
     MSQ   BUS 
+    MSQ IST
 `);
 
 directionsTextArea.onchange = () => {
