@@ -111,7 +111,7 @@ const createWindow = async (): Promise<void> => {
 
       const direction = directions[directionIndex];
 
-      await sleep(Math.round(5000 * Math.random() + 1000));
+      await sleep(Math.round((ticketSearchParameters.delayMax - ticketSearchParameters.delayMin) * Math.random() + ticketSearchParameters.delayMin));
       findTickets(direction.from, direction.to, currentDate);
 
       return;
@@ -138,7 +138,7 @@ const createWindow = async (): Promise<void> => {
     }
 
     const direction = directions[directionIndex];
-    await sleep(Math.round(5000 * Math.random()) + 1000);
+    await sleep(Math.round((ticketSearchParameters.delayMax - ticketSearchParameters.delayMin) * Math.random() + ticketSearchParameters.delayMin));
     findTickets(direction.from, direction.to, currentDate);
   });
 };

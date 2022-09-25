@@ -79,6 +79,10 @@ searchForm.onsubmit = (e) => {
         return;
     }
 
+    if (searchParameters.delayMax < searchParameters.delayMin) {
+        alert('wait time max cannot be less than wait time min');
+        return;
+    }
 
     if (searchParameters.dateFrom > searchParameters.dateTo) {
         alert('Date from cannot be before date to');
