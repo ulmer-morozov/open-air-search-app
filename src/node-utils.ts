@@ -4,15 +4,15 @@ import util from 'util';
 
 const readFile = util.promisify(fs.readFile);
 
-export async function injectScript(webContents: WebContents, uri: string): Promise<void> {
+export function injectScript(webContents: WebContents, uri: string): void {
     if (uri.startsWith('file://')) {
         try {
-            const scriptDataBuffer = await readFile(uri.replace('file://', ''));
+            const scriptDataBuffer = fs.readFileSync(uri.replace('file://', ''));
             const scriptData = scriptDataBuffer.toString();
 
             console.log(scriptData);
 
-            await webContents.executeJavaScript(`
+            webContents.executeJavaScript(`
                 const po = document.createElement('script');
                 po.text = \`${scriptData}\`;
                 document.body.appendChild(po);

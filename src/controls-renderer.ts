@@ -38,7 +38,7 @@ directionsTextArea.onchange = () => {
 }
 
 waitTimeFromInput.valueAsNumber = 1000;
-waitTimeToInput.valueAsNumber = 5000;
+waitTimeToInput.valueAsNumber = 1000;
 
 function setUIEnabled(searching: boolean) {
     dateFromInput.readOnly = !searching;
@@ -68,7 +68,7 @@ searchForm.onsubmit = (e) => {
 
     const searchParameters: ITicketSearchParameters = {
         dateFrom: dateFromInput.valueAsDate ?? new Date(),
-        dateTo: dateFromInput.valueAsDate ?? new Date(),
+        dateTo: dateToInput.valueAsDate ?? new Date(),
         directions: parseDirections(directionsTextArea.value),
         delayMin: waitTimeFromInput.valueAsNumber,
         delayMax: waitTimeToInput.valueAsNumber

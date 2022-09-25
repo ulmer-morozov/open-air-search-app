@@ -45,7 +45,7 @@ const createWindow = async (): Promise<void> => {
   controlsView.setBounds({ x: 0, y: windowGap, width: controlsWidth, height: windowHeight - windowGap })
   controlsView.setAutoResize({ width: true, height: true });
 
-  controlsView.webContents.openDevTools({ mode: 'detach' });
+  // controlsView.webContents.openDevTools({ mode: 'detach' });
   controlsView.webContents.loadURL(CONTROLS_WEBPACK_ENTRY);
 
   const belaviaHandler = new BelaviaHandler();
@@ -54,7 +54,7 @@ const createWindow = async (): Promise<void> => {
 
   belaviaHandler.view.setBounds({ x: controlsWidth, y: windowGap, width: windowWidth - controlsWidth, height: windowHeight - windowGap })
   belaviaHandler.view.setAutoResize({ width: true, height: true });
-  // belaviaHandler.view.webContents.openDevTools();
+  belaviaHandler.view.webContents.openDevTools();
 
   // убирает синхронизацию заголовка с <title> страницы html
   mainWindow.on('page-title-updated', (e) => {
@@ -86,6 +86,9 @@ const createWindow = async (): Promise<void> => {
 
   ipcMain.handle('search-tickets-stop', () => {
     ticketSearchParameters = undefined;
+    directionIndex = 0;
+    currentDate.setTime(0);
+
     // очищаем страницу
     belaviaHandler.view.webContents.loadURL("data:text/html;base64," + "PCFET0NUWVBFIGh0bWw-CjxodG1sIGxhbmc9ImVuIj4KCjxoZWFkPgogIDxtZXRhIG5hbWU9ImRlc2NyaXB0aW9uIiBjb250ZW50PSJXZWJwYWdlIGRlc2NyaXB0aW9uIGdvZXMgaGVyZSIgLz4KICA8bWV0YSBjaGFyc2V0PSJ1dGYtOCI-CiAgPHRpdGxlPkNoYW5nZV9tZTwvdGl0bGU-CiAgPG1ldGEgbmFtZT0idmlld3BvcnQiIGNvbnRlbnQ9IndpZHRoPWRldmljZS13aWR0aCwgaW5pdGlhbC1zY2FsZT0xIj4KICA8bWV0YSBuYW1lPSJhdXRob3IiIGNvbnRlbnQ9IiI-CiAgPGxpbmsgcmVsPSJzdHlsZXNoZWV0IiBocmVmPSJjc3Mvc3R5bGUuY3NzIj4KICA8c2NyaXB0IHNyYz0iaHR0cDovL2NvZGUuanF1ZXJ5LmNvbS9qcXVlcnktbGF0ZXN0Lm1pbi5qcyI-PC9zY3JpcHQ-CjwvaGVhZD4KCjxib2R5PgogIAo8ZGl2IGNsYXNzPSJjb250YWluZXIiPgogIAo8L2Rpdj4KCjxzY3JpcHQ-Cjwvc2NyaXB0PgoKPC9ib2R5Pgo8L2h0bWw-");
   });
@@ -104,12 +107,10 @@ const createWindow = async (): Promise<void> => {
       return;
     }
 
-    const { directions, dateFrom, dateTo } = ticketSearchParameters;
-
-    if (directionIndex < directions.length - 1) {
+    if (directionIndex < ticketSearchParameters.directions.length - 1) {
       directionIndex++;
 
-      const direction = directions[directionIndex];
+      const direction = ticketSearchParameters.directions[directionIndex];
 
       await sleep(Math.round((ticketSearchParameters.delayMax - ticketSearchParameters.delayMin) * Math.random() + ticketSearchParameters.delayMin));
       findTickets(direction.from, direction.to, currentDate);
@@ -118,7 +119,7 @@ const createWindow = async (): Promise<void> => {
     }
 
     // дошли до конца дат
-    if (directionIndex === directions.length - 1) {
+    if (directionIndex === ticketSearchParameters.directions.length - 1) {
 
       directionIndex = 0;
     } else {
@@ -127,17 +128,17 @@ const createWindow = async (): Promise<void> => {
 
     currentDate.setDate(currentDate.getDate() + 1);
 
-    const dayAfterMax = new Date(dateTo.getTime());
+    const dayAfterMax = new Date(ticketSearchParameters.dateTo.getTime());
     dayAfterMax.setDate(dayAfterMax.getDate() + 1);
 
-    if (currentDate > dayAfterMax) {
-      console.log('start searching from the beginning');
+    if (currentDate.getTime() > dayAfterMax.getTime()) {
+      console.log('start searching from the beginning' ,currentDate, dayAfterMax);
 
       directionIndex = 0;
-      currentDate.setTime(dateFrom.getTime());
+      currentDate.setTime(ticketSearchParameters.dateFrom.getTime());
     }
 
-    const direction = directions[directionIndex];
+    const direction = ticketSearchParameters.directions[directionIndex];
     await sleep(Math.round((ticketSearchParameters.delayMax - ticketSearchParameters.delayMin) * Math.random() + ticketSearchParameters.delayMin));
     findTickets(direction.from, direction.to, currentDate);
   });
