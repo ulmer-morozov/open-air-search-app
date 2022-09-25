@@ -21,13 +21,13 @@ if (require('electron-squirrel-startup')) {
 
 const createWindow = async (): Promise<void> => {
   const windowWidth = 1200;
-  const windowHeight = 1200;
+  const windowHeight = 700;
   const windowGap = 26;
   const controlsWidth = 200;
 
   const mainWindow = new BrowserWindow({
     width: windowWidth,
-    height: 800,
+    height: windowHeight,
     backgroundColor: '#444'
   });
 
