@@ -34,7 +34,7 @@ export class BelaviaHandler implements IAviaHandler {
         webContents.on('did-finish-load', async () => {
             console.log('belaviaView did-finish-load');
 
-            await injectScript(webContents, BELAVIA_WEBPACK_ENTRY);
+            injectScript(webContents, BELAVIA_WEBPACK_ENTRY);
         });
     }
 
