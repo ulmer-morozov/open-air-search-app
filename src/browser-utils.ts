@@ -1,3 +1,5 @@
+import { IDirection } from "./IDirection";
+
 type Constructor<T> = new (...args: unknown[]) => T;
 
 export function getElementById<T extends HTMLElement>(id: string, elType: Constructor<T>): T {
@@ -21,10 +23,23 @@ export function getTextareaById(id: string): HTMLTextAreaElement {
 }
 
 export function cleanDirections(text: string): string {
-    const parts = text
-        .split(/\r|\n/)
-        .map(x => x.trim().replace(/ {2}/g, ' '))
-        .filter(x => x.length > 0);
+    const directions = parseDirections(text);
 
-    return parts.join('\r')
+    const newText = directions
+        .map(x => `${x.from} ${x.to}`)
+        .join('\n');
+
+    return newText + '\n';
+}
+
+export function parseDirections(text: string): IDirection[] {
+    const directions = text
+        .split(/\r|\n/)
+        .map(x => x.trim())
+        .filter(x => x.length > 0)
+        .map(x => x.split(' ').map(y => y.toUpperCase().trim()).filter(z => z.length > 0))
+        .filter(x => x.length === 2)
+        .map(x => ({ from: x[0], to: x[1] } as IDirection));
+
+    return directions;
 }

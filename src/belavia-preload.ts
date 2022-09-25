@@ -1,7 +1,7 @@
 import { contextBridge, ipcRenderer } from 'electron'
-import { IPreloadContracts } from './IPreloadContracts';
+import { IBelaviaPreloadContracts } from './IBelaviaPreloadContracts';
 
-const contracts: IPreloadContracts = {
+const contracts: IBelaviaPreloadContracts = {
     chrome: () => process.versions.chrome,
     onTickets: (ticketCount) => {
         ipcRenderer.invoke('on-tickets', ticketCount);

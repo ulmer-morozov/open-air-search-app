@@ -1,12 +1,12 @@
 import { ApiError } from "./ApiError";
-import { IPreloadContracts } from "./IPreloadContracts";
+import { IBelaviaPreloadContracts } from "./IBelaviaPreloadContracts";
 import { TicketResponse } from "./TicketResponse";
 import { TicketsRequest } from "./TicketsRequest";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 // const audioUrl = require('./643569.mp3');
 
-declare const contracts: IPreloadContracts;
+declare const contracts: IBelaviaPreloadContracts;
 
 console.log(`👋 ! ${contracts.chrome()}`);
 

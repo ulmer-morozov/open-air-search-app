@@ -53,8 +53,8 @@ export class BelaviaHandler implements IAviaHandler {
 
         console.log(`lastUrl: ${this._lastUrl}`);
 
-        // this.view.webContents.loadURL(this._lastUrl);
-        this.view.webContents.loadURL("https://google.com");
+        this.view.webContents.loadURL(this._lastUrl);
+        // this.view.webContents.loadURL("https://google.com");
     }
 
 }
