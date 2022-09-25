@@ -1,5 +1,5 @@
 import { BrowserView } from "electron";
-import { injectScript } from "./utils";
+import { injectScript } from "./node-utils";
 import { IAviaHandler } from './IAviaHandler';
 import { FindTicketsData } from "./FindTicketsData";
 

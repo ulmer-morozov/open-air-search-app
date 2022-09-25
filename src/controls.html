@@ -1,1 +1,57 @@
-<h1>Controls</h1>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>My Website</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@100;400&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <h3>AIR Search</h3>
+
+    <form id="searchForm">
+        <!-- Диапазон дат вылета -->
+        <div class="form-section">
+            <div class="form-group">
+                <label for="dateFrom">Date from</label>
+                <input id="dateFromInput" name="dateFrom" type="date" />
+            </div>
+
+            <div class="form-group">
+                <label for="dateTo">Date to</label>
+                <input id="dateToInput" name="dateTo" type="date" />
+            </div>
+        </div>
+
+        <!-- Список направлений -->
+        <div class="form-section">
+            <div class="form-group">
+                <label>Directions</label>
+                <textarea id="directionsInput" name="directions"></textarea>
+            </div>
+        </div>
+
+        <!-- Время между поисками -->
+        <div class="form-section">
+            <h6>Time between searches</h6>
+            <div class="form-group">
+                <label for="waitTimeFrom">Min time (milliseconds)</label>
+                <input id="waitTimeFromInput" name="waitTimeFrom" type="number" />
+            </div>
+
+            <div class="form-group">
+                <label for="waitTimeTo">Max time (milliseconds)</label>
+                <input id="waitTimeToInput" name="waitTimeTo" type="number" />
+            </div>
+        </div>
+
+        <button type="submit">Get Tickets!</button>
+    </form>
+</body>
+
+</html>

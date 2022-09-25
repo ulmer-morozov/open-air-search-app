@@ -1,0 +1,39 @@
+body {
+    font-family: 'Roboto Mono', monospace;
+    color: #eee;
+}
+
+h3,
+h6 {
+    color: #888;
+}
+
+h6 {
+    font-size: 11px;
+    margin-bottom: 4px;
+    margin-top: 0;
+}
+
+label {
+    display: block;
+    font-size: 11px;
+    margin-bottom: 3px;
+}
+
+textarea {
+    resize: none;
+
+    &#directionsInput {
+        height: 200px;
+    }
+}
+
+form {
+    .form-section {
+        margin-bottom: 24px;
+    }
+
+    .form-group {
+        margin-bottom: 10px;
+    }
+}
