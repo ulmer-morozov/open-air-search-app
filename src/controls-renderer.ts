@@ -54,7 +54,7 @@ function setUIEnabled(enabled: boolean) {
     searchButton.disabled = !enabled;
     searchButton.hidden = !enabled;
 
-    stopButton.hidden = enabled;
+    stopButton.disabled = enabled;
     stopButton.hidden = enabled;
 
     // данные пассажира

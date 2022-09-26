@@ -2,6 +2,8 @@ body {
     font-family: 'Roboto Mono', monospace;
     color: #eee;
     overflow-y: scroll;
+
+    padding-bottom: 50px;
 }
 
 h3,
@@ -63,7 +65,6 @@ form {
 
 #searchButton {
     display: block;
-    margin-bottom: 50px;
     width: 80%;
     padding: 20px;
     box-sizing: border-box;

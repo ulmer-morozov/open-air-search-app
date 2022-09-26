@@ -25,14 +25,15 @@ export class BelaviaHandler implements IAviaHandler {
     constructor() {
         this.view = new BrowserView({
             webPreferences: {
-                preload: BELAVIA_PRELOAD_WEBPACK_ENTRY
+                preload: BELAVIA_PRELOAD_WEBPACK_ENTRY,
+                contextIsolation: false
             }
         });
 
         const webContents = this.view.webContents;
 
-        webContents.on('did-finish-load', async () => {
-            console.log('belaviaView did-finish-load');
+        webContents.on('dom-ready', async () => {
+            console.log('belaviaView dom-ready');
 
             injectScript(webContents, BELAVIA_WEBPACK_ENTRY);
         });

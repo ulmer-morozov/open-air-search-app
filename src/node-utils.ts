@@ -19,7 +19,7 @@ export function injectScript(webContents: WebContents, uri: string): void {
 
             webContents.executeJavaScript(`
                 const po = document.createElement('script');
-                po.text = \`${scriptData}\`;
+                po.text = \`${scriptData.replace('`','\\`')}\`;
                 document.body.appendChild(po);
             `);
 
