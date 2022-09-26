@@ -9,6 +9,7 @@ export interface ITicketSearchParameters {
     delayMax: number;
 
     autoFill: boolean;
+    aproveTillPayment: boolean;
 
     passengerTitle: string;
     lastName: string;

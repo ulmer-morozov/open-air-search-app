@@ -207,11 +207,9 @@ async function ticketFoundHandler(ticketCount: number): Promise<void> {
     await sleep(2000);
     querySelector('form button[type=submit]').click();
 
-
     // нажимаем кнопку далее в разделе услуги
     await sleep(5000);
     querySelector('form button[type=submit]').click();
-
 
     // Оплата банковской картой
     await sleep(2000);
@@ -221,5 +219,6 @@ async function ticketFoundHandler(ticketCount: number): Promise<void> {
     getRequiredElementById('reviewAcknowledgment').click()
 
     // нажимаем кнопку далее в разделе оплата
-    // querySelector('form button[type=submit]').click();
+    if (settings.aproveTillPayment)
+        querySelector('form button[type=submit]').click();
 }

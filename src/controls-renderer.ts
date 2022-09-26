@@ -24,6 +24,7 @@ directionsTextArea.onchange = () => {
 }
 
 const autoFillInput = getInputById('autoFillInput');
+const aproveTillPaymentInput = getInputById('aproveTillPaymentInput');
 const passengerTitleInput = getInputById('passengerTitleInput');
 const lastNameInput = getInputById('lastNameInput');
 const firstNameInput = getInputById('firstNameInput');
@@ -60,6 +61,7 @@ function setUIEnabled(enabled: boolean) {
 
     // обращение
     setInputEnabled(autoFillInput, enabled)
+    setInputEnabled(aproveTillPaymentInput, enabled)
     setInputEnabled(passengerTitleInput, enabled)
     setInputEnabled(lastNameInput, enabled);
     setInputEnabled(firstNameInput, enabled)
@@ -85,6 +87,8 @@ function fillUI(initialSettings: ITicketSearchParameters) {
 
     // пассажирские данные
     autoFillInput.checked = initialSettings.autoFill;
+    aproveTillPaymentInput.checked = initialSettings.aproveTillPayment;
+
     passengerTitleInput.value = initialSettings.passengerTitle;
     lastNameInput.value = initialSettings.lastName;
     firstNameInput.value = initialSettings.firstName;
@@ -109,6 +113,7 @@ searchForm.onsubmit = (e) => {
         delayMin: waitTimeFromInput.valueAsNumber,
         delayMax: waitTimeToInput.valueAsNumber,
         autoFill: autoFillInput.checked,
+        aproveTillPayment: aproveTillPaymentInput.checked,
         passengerTitle: passengerTitleInput.value,
         lastName: lastNameInput.value,
         firstName: firstNameInput.value,

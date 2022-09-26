@@ -64,6 +64,7 @@ export async function getStoredSettings(): Promise<ITicketSearchParameters> {
             delayMin: 1000,
             delayMax: 2000,
             autoFill: false,
+            aproveTillPayment: false,
             passengerTitle: "Mr.",
             lastName: "",
             firstName: "",
