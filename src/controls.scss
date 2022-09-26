@@ -6,6 +6,8 @@ body {
 h3,
 h6 {
     color: #888;
+    margin: 0;
+    margin-bottom: 8px;
 }
 
 h6 {
@@ -24,16 +26,44 @@ textarea {
     resize: none;
 
     &#directionsInput {
-        height: 200px;
+        height: 50px;
     }
 }
 
 form {
     .form-section {
-        margin-bottom: 24px;
+        margin-bottom: 14px;
     }
 
     .form-group {
         margin-bottom: 10px;
     }
+
+    .one-line {
+        display: flex;
+
+        .form-group {
+            flex: 1;
+
+            input {
+                width: 100%;
+                width: 100%;
+                min-width: 100%;
+                max-width: 100%;
+                box-sizing: border-box;
+            }
+        }
+
+        .form-group+.form-group {
+            padding-left: 10px;
+        }
+    }
+}
+
+#searchButton {
+    display: block;
+    margin-bottom: 50px;
+    width: 80%;
+    padding: 20px;
+    box-sizing: border-box;
 }

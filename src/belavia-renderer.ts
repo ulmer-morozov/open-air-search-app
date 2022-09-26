@@ -11,6 +11,7 @@ console.log(`👋 Попробуем найти билетики!`);
 let snd: HTMLAudioElement | undefined;
 
 document.addEventListener('keydown', () => stopAudioSignal());
+document.addEventListener('click', () => stopAudioSignal());
 
 function stopAudioSignal(): void {
     if (snd === undefined || snd === null)

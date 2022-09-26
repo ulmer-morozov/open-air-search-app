@@ -67,7 +67,7 @@ export async function getStoredSettings(): Promise<ITicketSearchParameters> {
             passengerTitle: "Mr.",
             lastName: "",
             firstName: "",
-            nationality: "",
+            nationality: "Российская Федерация",
             dateOfBirth: undefined,
             documentNumber: "",
             documentExpirationDate: undefined,
@@ -85,6 +85,12 @@ export async function getStoredSettings(): Promise<ITicketSearchParameters> {
 
     parsedConfig.dateTo = new Date(parsedConfig.dateTo);
     parsedConfig.dateFrom = new Date(parsedConfig.dateFrom);
+
+    if ((parsedConfig.dateOfBirth as unknown as string)?.length > 0)
+        parsedConfig.dateOfBirth = new Date(parsedConfig.dateOfBirth);
+
+    if ((parsedConfig.documentExpirationDate as unknown as string)?.length > 0)
+        parsedConfig.documentExpirationDate = new Date(parsedConfig.documentExpirationDate);
 
     return parsedConfig;
 }
