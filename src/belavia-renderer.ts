@@ -1,7 +1,6 @@
 import { ApiError } from "./ApiError";
-import { beep, getElementById, getRequiredElementById, querySelector, sleep, getInputById, simulateKeyPress, setNativeValue } from './browser-utils';
+import { getRequiredElementById, querySelector, sleep, getInputById, setNativeValue, beep } from './browser-utils';
 import { IBelaviaPreloadContracts } from "./IBelaviaPreloadContracts";
-import { ITicketSearchParameters } from "./ITicketSearchParameters";
 import { TicketResponse } from "./TicketResponse";
 import { TicketsRequest } from "./TicketsRequest";
 
@@ -59,11 +58,15 @@ async function processApiResponse(url: string, requestData: Document | XMLHttpRe
 
         // contracts.onTickets(tickets.length);
 
-        if (tickets.length > 0) {
-            setTimeout(() => {
-                ticketFoundHandler();
-            }, 200);
+        if (tickets.length === 0) {
+            // идем дальше
+            contracts.onTickets(tickets.length);
+            return;
         }
+
+        setTimeout(() => {
+            ticketFoundHandler(tickets.length);
+        }, 200);
     }
 }
 
@@ -112,8 +115,16 @@ const proxiedOpen = window.XMLHttpRequest.prototype.open;
     return proxiedOpen.apply(this, [].slice.call(openArguments));
 };
 
-async function ticketFoundHandler(): Promise<void> {
-    // snd = beep();
+async function ticketFoundHandler(ticketCount: number): Promise<void> {
+    snd = beep();
+
+    const settings = await contracts.getSettings();
+
+    if (!settings.autoFill) {
+        // вопим и всё
+        contracts.onTickets(ticketCount);
+        return;
+    }
 
     // выставим русские рубли сначала
     const currencyDiv = getRequiredElementById('currency');
@@ -151,36 +162,45 @@ async function ticketFoundHandler(): Promise<void> {
 
     // переходим к форме
 
-
     // обращение
-    chooseSelector('passenger-0.title', passengerTitle);
+    if (settings.passengerTitle?.length > 0)
+        chooseSelector('passenger-0.title', settings.passengerTitle);
 
     // фамилия
-    setNativeValue(getInputById('passenger-0.lastName'), lastName);
+    if (settings.lastName?.length > 0)
+        setNativeValue(getInputById('passenger-0.lastName'), settings.lastName);
 
     // имя
-    setNativeValue(getInputById('passenger-0.firstName'), firstName);
+    if (settings.firstName?.length > 0)
+        setNativeValue(getInputById('passenger-0.firstName'), settings.firstName);
 
     // дата рождения
-    setNativeValue(getInputById('passenger-0.dateOfBirth'), toDD_MM_YYYY(dateOfBirth));
+    if (settings.dateOfBirth != undefined)
+        setNativeValue(getInputById('passenger-0.dateOfBirth'), toDD_MM_YYYY(settings.dateOfBirth));
 
     // национальность
-    chooseSelector('passenger-0.nationality', nationality);
+    if (settings.nationality?.length > 0)
+        chooseSelector('passenger-0.nationality', settings.nationality);
 
     // номер документа
-    setNativeValue(getInputById('passenger-0.documentNumber'), documentNumber);
+    if (settings.documentNumber?.length > 0)
+        setNativeValue(getInputById('passenger-0.documentNumber'), settings.documentNumber);
 
     // срок действия
-    setNativeValue(getInputById('passenger-0.documentExpirationDate'), toDD_MM_YYYY(documentExpirationDate));
+    if (settings.documentExpirationDate != undefined)
+        setNativeValue(getInputById('passenger-0.documentExpirationDate'), toDD_MM_YYYY(settings.documentExpirationDate));
 
     // Код страны телефона
-    chooseSelector('contact-0.phoneCountry', phoneCountry);
+    if (settings.phoneCountry?.length > 0)
+        chooseSelector('contact-0.phoneCountry', settings.phoneCountry);
 
     // Номер телефона
-    setNativeValue(getInputById('contact-0.phoneNumber'), restPhoneNumber);
+    if (settings.restPhoneNumber?.length > 0)
+        setNativeValue(getInputById('contact-0.phoneNumber'), settings.restPhoneNumber);
 
     // Email
-    setNativeValue(getInputById('contact-0.email'), email);
+    if (settings.email?.length > 0)
+        setNativeValue(getInputById('contact-0.email'), settings.email);
 
     // нажимаем кнопку покупки
     await sleep(2000);

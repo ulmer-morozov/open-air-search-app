@@ -62,7 +62,18 @@ export async function getStoredSettings(): Promise<ITicketSearchParameters> {
             dateTo: new Date(),
             directions: [{ from: 'MSQ', to: 'BUS' }, { from: 'MSQ', to: 'IST' }],
             delayMin: 1000,
-            delayMax: 2000
+            delayMax: 2000,
+            autoFill: false,
+            passengerTitle: "Mr.",
+            lastName: "",
+            firstName: "",
+            nationality: "",
+            dateOfBirth: undefined,
+            documentNumber: "",
+            documentExpirationDate: undefined,
+            phoneCountry: "(+7) Российская Федерация",
+            restPhoneNumber: "",
+            email: ""
         }
 
         return defaultParameters;

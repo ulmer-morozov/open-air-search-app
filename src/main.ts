@@ -83,15 +83,15 @@ const createWindow = async (): Promise<void> => {
 
   ipcMain.handle('search-tickets', async (_event, sp: ITicketSearchParameters) => {
     console.log(sp);
+    
     ticketSearchParameters = sp;
+    await storeSettings(ticketSearchParameters);
 
     currentDate.setTime(sp.dateFrom.getTime());
 
     const direction = ticketSearchParameters.directions[directionIndex];
 
     findTickets(direction.from, direction.to, currentDate);
-
-    await storeSettings(ticketSearchParameters);
   });
 
   ipcMain.handle('search-tickets-stop', () => {
