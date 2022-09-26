@@ -1,5 +1,5 @@
+import { ITicketSearchParameters } from './ITicketSearchParameters';
 
 export interface IBelaviaPreloadContracts {
-    chrome: () => string;
     onTickets(count: number): void;
 }

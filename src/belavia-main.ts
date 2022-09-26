@@ -49,12 +49,10 @@ export class BelaviaHandler implements IAviaHandler {
     public findTickets(airportFrom: string, airportTo: string, date: Date): void {
         const journey = `${airportFrom}${airportTo}${formatDate(date)}`;
 
-        this._lastUrl = `https://ibe.belavia.by/select?journeyType=Ow&journey=${journey}&adults=1&children=0&infants=0&lang=en`;
+        this._lastUrl = `https://ibe.belavia.by/select?journeyType=Ow&journey=${journey}&adults=1&children=0&infants=0&lang=ru`;
 
         console.log(`lastUrl: ${this._lastUrl}`);
 
         this.view.webContents.loadURL(this._lastUrl);
-        // this.view.webContents.loadURL("https://google.com");
     }
-
 }

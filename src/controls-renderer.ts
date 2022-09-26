@@ -1,4 +1,4 @@
-import { getInputById, getTextareaById, cleanDirections, getElementById, parseDirections } from './browser-utils';
+import { getInputById, getTextareaById, cleanDirections, getElementById, parseDirections, stringifyDirections } from './browser-utils';
 import "./controls.scss";
 import { IControlPreloadContracts } from './IControlPreloadContracts';
 import { ITicketSearchParameters } from './ITicketSearchParameters';
@@ -19,27 +19,9 @@ const waitTimeToInput = getInputById('waitTimeToInput');
 
 const directionsTextArea = getTextareaById('directionsInput');
 
-const initialDateFrom = new Date();
-const initialDateTo = new Date();
-initialDateTo.setDate(initialDateFrom.getDate() + 1)
-
-dateFromInput.valueAsDate = initialDateFrom;
-dateToInput.valueAsDate = initialDateTo;
-
-directionsTextArea.value = cleanDirections(`
-MSQ TBS  
- MSQ  KUT 
-
-    MSQ   BUS 
-    MSQ IST
-`);
-
 directionsTextArea.onchange = () => {
     directionsTextArea.value = cleanDirections(directionsTextArea.value);
 }
-
-waitTimeFromInput.valueAsNumber = 1000;
-waitTimeToInput.valueAsNumber = 1000;
 
 function setUIEnabled(searching: boolean) {
     dateFromInput.readOnly = !searching;
@@ -62,6 +44,18 @@ function setUIEnabled(searching: boolean) {
 
     stopButton.hidden = searching;
     searchButton.hidden = !searching;
+}
+
+function fillUI(initialSettings: ITicketSearchParameters) {
+    console.log('fill UI', initialSettings);
+    
+    dateFromInput.valueAsDate = initialSettings.dateFrom;
+    dateToInput.valueAsDate = initialSettings.dateTo;
+
+    directionsTextArea.value = stringifyDirections(initialSettings.directions);
+
+    waitTimeFromInput.valueAsNumber = initialSettings.delayMin;
+    waitTimeToInput.valueAsNumber = initialSettings.delayMax;
 }
 
 searchForm.onsubmit = (e) => {
@@ -104,3 +98,12 @@ stopButton.onclick = () => {
 }
 
 setUIEnabled(true);
+
+async function start(): Promise<void> {
+    const initialSettings = await contracts.getSettings();
+
+    debugger;
+    fillUI(initialSettings);
+}
+
+start();
