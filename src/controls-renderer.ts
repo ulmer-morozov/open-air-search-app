@@ -48,7 +48,7 @@ function setUIEnabled(searching: boolean) {
 
 function fillUI(initialSettings: ITicketSearchParameters) {
     console.log('fill UI', initialSettings);
-    
+
     dateFromInput.valueAsDate = initialSettings.dateFrom;
     dateToInput.valueAsDate = initialSettings.dateTo;
 
@@ -102,7 +102,6 @@ setUIEnabled(true);
 async function start(): Promise<void> {
     const initialSettings = await contracts.getSettings();
 
-    debugger;
     fillUI(initialSettings);
 }
 

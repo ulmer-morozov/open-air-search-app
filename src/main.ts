@@ -52,7 +52,7 @@ const createWindow = async (): Promise<void> => {
   controlsView.setBounds({ x: 0, y: windowGap, width: controlsWidth, height: windowHeight - windowGap })
   controlsView.setAutoResize({ width: true, height: true });
 
-  controlsView.webContents.openDevTools({ mode: 'detach' });
+  // controlsView.webContents.openDevTools({ mode: 'detach' });
   controlsView.webContents.loadURL(CONTROLS_WEBPACK_ENTRY);
 
   const belaviaHandler = new BelaviaHandler();
