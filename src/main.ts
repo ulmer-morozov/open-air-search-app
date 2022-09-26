@@ -52,7 +52,7 @@ const createWindow = async (): Promise<void> => {
   controlsView.setBounds({ x: 0, y: windowGap, width: controlsWidth, height: windowHeight - windowGap })
   controlsView.setAutoResize({ width: true, height: true });
 
-  controlsView.webContents.openDevTools({ mode: 'detach' });
+  // controlsView.webContents.openDevTools({ mode: 'detach' });
   controlsView.webContents.loadURL(CONTROLS_WEBPACK_ENTRY);
 
   const belaviaHandler = new BelaviaHandler();
@@ -61,7 +61,7 @@ const createWindow = async (): Promise<void> => {
 
   belaviaHandler.view.setBounds({ x: controlsWidth, y: windowGap, width: windowWidth - controlsWidth, height: windowHeight - windowGap })
   belaviaHandler.view.setAutoResize({ width: true, height: true });
-  // belaviaHandler.view.webContents.openDevTools();
+  belaviaHandler.view.webContents.openDevTools();
 
   // убирает синхронизацию заголовка с <title> страницы html
   mainWindow.on('page-title-updated', (e) => {
