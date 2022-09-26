@@ -38,19 +38,86 @@
 
         <!-- Время между поисками -->
         <div class="form-section">
-            <h6>Time between searches</h6>
+            <!-- <h6>Time between searches</h6> -->
+            <div class="one-line">
+                <div class="form-group">
+                    <label for="waitTimeFrom">Min time</label>
+                    <input id="waitTimeFromInput" name="waitTimeFrom" type="number" />
+                </div>
+
+                <div class="form-group">
+                    <label for="waitTimeTo">Max time</label>
+                    <input id="waitTimeToInput" name="waitTimeTo" type="number" />
+                </div>
+            </div>
+
+        </div>
+
+        <div class="form-section">
             <div class="form-group">
-                <label for="waitTimeFrom">Min time (milliseconds)</label>
-                <input id="waitTimeFromInput" name="waitTimeFrom" type="number" />
+                <label for="autoFillInput">Автозаполнение билета</label>
+                <input id="autoFillInput" name="autoFill" type="checkbox" />
+            </div>
+            <div class="form-group">
+                <label for="aproveTillPaymentInput">Заполнить, согласиться и перейти к оплате</label>
+                <input id="aproveTillPaymentInput" name="aproveTillPayment" type="checkbox" />
+            </div>
+            <div class="form-group">
+                <label for="passengerTitleInput">Обращение</label>
+                <input id="passengerTitleInput" name="passengerTitle" type="text" />
             </div>
 
             <div class="form-group">
-                <label for="waitTimeTo">Max time (milliseconds)</label>
-                <input id="waitTimeToInput" name="waitTimeTo" type="number" />
+                <label for="lastNameInput">Фамилия</label>
+                <input id="lastNameInput" name="lastName" type="text" />
+            </div>
+
+            <div class="form-group">
+                <label for="firstNameInput">Имя</label>
+                <input id="firstNameInput" name="firstName" type="text" />
             </div>
         </div>
 
-        <button id="searchButton" type="submit">Get Tickets!</button>
+        <div class="form-section">
+            <div class="form-group">
+                <label for="dateOfBirthInput">Дата рождения</label>
+                <input id="dateOfBirthInput" name="dateOfBirth" type="date" />
+            </div>
+
+            <div class="form-group">
+                <label for="nationalityInput">Национальность</label>
+                <input id="nationalityInput" name="nationality" type="text" />
+            </div>
+
+            <div class="form-group">
+                <label for="documentNumberInput">Номер документа</label>
+                <input id="documentNumberInput" name="documentNumber" type="text" />
+            </div>
+
+            <div class="form-group">
+                <label for="documentExpirationDateInput">Срок действия документа</label>
+                <input id="documentExpirationDateInput" name="documentExpirationDate" type="date" />
+            </div>
+        </div>
+
+        <div class="form-section">
+            <div class="form-group">
+                <label for="phoneCountryInput">Код страны телефона</label>
+                <input id="phoneCountryInput" name="phoneCountry" type="text" />
+            </div>
+
+            <div class="form-group">
+                <label for="restPhoneNumberInput">Номер телефона (без +7 или 8)</label>
+                <input id="restPhoneNumberInput" name="restPhoneNumber" type="text" />
+            </div>
+
+            <div class="form-group">
+                <label for="emailInput">Email</label>
+                <input id="emailInput" name="email" type="text" />
+            </div>
+        </div>
+
+        <button id="searchButton" type="submit">Start Searching!</button>
     </form>
     <button id="stopButton" type="button">Stop search</button>
 </body>

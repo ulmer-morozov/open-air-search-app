@@ -2,6 +2,24 @@ import { IDirection } from "./IDirection";
 
 type Constructor<T> = new (...args: unknown[]) => T;
 
+export function querySelector(selector: string): HTMLElement {
+    const element = document.querySelector(selector);
+
+    if (element === undefined || element === null)
+        throw new Error(`element with selector = ${selector} not found`);
+
+    return element as HTMLElement;
+}
+
+export function getRequiredElementById(id: string): HTMLElement {
+    const element = document.getElementById(id);
+
+    if (element === undefined || element === null)
+        throw new Error(`element with id = ${id} not found`);
+
+    return element;
+}
+
 export function getElementById<T extends HTMLElement>(id: string, elType: Constructor<T>): T {
     const element = document.getElementById(id);
 
@@ -53,4 +71,46 @@ export function beep(): HTMLAudioElement {
     snd.play();
 
     return snd;
+}
+
+export function sleep(time: number): Promise<void> {
+    return new Promise((resolve) => setTimeout(resolve, time));
+}
+
+export async function simulateKeyPress(input: HTMLInputElement, text: string): Promise<void> {
+    const chars = text.split('');
+
+    for (let i = 0; i < chars.length; i++) {
+        const char = chars[i];
+        const evt = new KeyboardEvent('keypress', { bubbles: true, cancelable: true, key: char, shiftKey: true });
+
+        input.focus();
+        await sleep(1000);
+        input.click();
+        await sleep(1000);
+        input.focus();
+
+        const canceled = !input.dispatchEvent(evt);
+        if (canceled)
+            console.error(`cannot dispacth event for: ${char}`)
+
+        await sleep(1000);
+    }
+}
+
+export function setNativeValue(element: HTMLInputElement, value: string): void {
+    const lastValue = element.value;
+
+    element.value = value;
+
+    const event = new Event("input", { target: element, bubbles: true } as any);
+    // React 15
+    (event as any).simulated = true;
+
+    // React 16
+    const tracker = (element as any)._valueTracker;
+    if (tracker) {
+        tracker.setValue(lastValue);
+    }
+    element.dispatchEvent(event);
 }

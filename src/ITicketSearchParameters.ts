@@ -7,4 +7,18 @@ export interface ITicketSearchParameters {
     directions: IDirection[];
     delayMin: number;
     delayMax: number;
+
+    autoFill: boolean;
+    aproveTillPayment: boolean;
+
+    passengerTitle: string;
+    lastName: string;
+    firstName: string;
+    nationality: string
+    dateOfBirth?: Date;
+    documentNumber: string
+    documentExpirationDate?: Date;
+    phoneCountry: string;
+    restPhoneNumber: string;
+    email: string;
 }

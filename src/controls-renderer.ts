@@ -23,32 +23,60 @@ directionsTextArea.onchange = () => {
     directionsTextArea.value = cleanDirections(directionsTextArea.value);
 }
 
-function setUIEnabled(searching: boolean) {
-    dateFromInput.readOnly = !searching;
-    dateFromInput.disabled = !searching;
+const autoFillInput = getInputById('autoFillInput');
+const aproveTillPaymentInput = getInputById('aproveTillPaymentInput');
+const passengerTitleInput = getInputById('passengerTitleInput');
+const lastNameInput = getInputById('lastNameInput');
+const firstNameInput = getInputById('firstNameInput');
+const dateOfBirthInput = getInputById('dateOfBirthInput');
+const nationalityInput = getInputById('nationalityInput');
+const documentNumberInput = getInputById('documentNumberInput');
+const documentExpirationDateInput = getInputById('documentExpirationDateInput');
 
-    dateToInput.readOnly = !searching;
-    dateToInput.disabled = !searching;
+const phoneCountryInput = getInputById('phoneCountryInput');
+const restPhoneNumberInput = getInputById('restPhoneNumberInput');
+const emailInput = getInputById('emailInput');
 
-    directionsTextArea.readOnly = !searching;
-    directionsTextArea.disabled = !searching;
+function setInputEnabled(input: HTMLInputElement | HTMLTextAreaElement, enabled: boolean): void {
+    input.readOnly = !enabled;
+    input.disabled = !enabled;
+}
 
-    waitTimeFromInput.readOnly = !searching;
-    waitTimeFromInput.disabled = !searching;
+function setUIEnabled(enabled: boolean) {
+    setInputEnabled(dateFromInput, enabled)
+    setInputEnabled(dateToInput, enabled)
 
-    waitTimeToInput.readOnly = !searching;
-    waitTimeToInput.disabled = !searching;
+    setInputEnabled(directionsTextArea, enabled)
 
-    searchButton.disabled = !searching;
-    searchButton.hidden = !searching;
+    setInputEnabled(waitTimeFromInput, enabled)
+    setInputEnabled(waitTimeToInput, enabled)
 
-    stopButton.hidden = searching;
-    searchButton.hidden = !searching;
+    searchButton.disabled = !enabled;
+    searchButton.hidden = !enabled;
+
+    stopButton.disabled = enabled;
+    stopButton.hidden = enabled;
+
+    // данные пассажира
+
+    // обращение
+    setInputEnabled(autoFillInput, enabled)
+    setInputEnabled(aproveTillPaymentInput, enabled)
+    setInputEnabled(passengerTitleInput, enabled)
+    setInputEnabled(lastNameInput, enabled);
+    setInputEnabled(firstNameInput, enabled)
+    setInputEnabled(dateOfBirthInput, enabled)
+    setInputEnabled(nationalityInput, enabled)
+    setInputEnabled(documentNumberInput, enabled)
+    setInputEnabled(documentExpirationDateInput, enabled)
+    setInputEnabled(phoneCountryInput, enabled)
+    setInputEnabled(restPhoneNumberInput, enabled)
+    setInputEnabled(emailInput, enabled)
 }
 
 function fillUI(initialSettings: ITicketSearchParameters) {
     console.log('fill UI', initialSettings);
-    
+
     dateFromInput.valueAsDate = initialSettings.dateFrom;
     dateToInput.valueAsDate = initialSettings.dateTo;
 
@@ -56,6 +84,23 @@ function fillUI(initialSettings: ITicketSearchParameters) {
 
     waitTimeFromInput.valueAsNumber = initialSettings.delayMin;
     waitTimeToInput.valueAsNumber = initialSettings.delayMax;
+
+    // пассажирские данные
+    autoFillInput.checked = initialSettings.autoFill;
+    aproveTillPaymentInput.checked = initialSettings.aproveTillPayment;
+
+    passengerTitleInput.value = initialSettings.passengerTitle;
+    lastNameInput.value = initialSettings.lastName;
+    firstNameInput.value = initialSettings.firstName;
+
+    dateOfBirthInput.valueAsDate = initialSettings.dateOfBirth;
+    nationalityInput.value = initialSettings.nationality;
+    documentNumberInput.value = initialSettings.documentNumber;
+    documentExpirationDateInput.valueAsDate = initialSettings.documentExpirationDate;
+
+    phoneCountryInput.value = initialSettings.phoneCountry;
+    restPhoneNumberInput.value = initialSettings.restPhoneNumber;
+    emailInput.value = initialSettings.email;
 }
 
 searchForm.onsubmit = (e) => {
@@ -66,7 +111,19 @@ searchForm.onsubmit = (e) => {
         dateTo: dateToInput.valueAsDate ?? new Date(),
         directions: parseDirections(directionsTextArea.value),
         delayMin: waitTimeFromInput.valueAsNumber,
-        delayMax: waitTimeToInput.valueAsNumber
+        delayMax: waitTimeToInput.valueAsNumber,
+        autoFill: autoFillInput.checked,
+        aproveTillPayment: aproveTillPaymentInput.checked,
+        passengerTitle: passengerTitleInput.value,
+        lastName: lastNameInput.value,
+        firstName: firstNameInput.value,
+        nationality: nationalityInput.value,
+        dateOfBirth: dateOfBirthInput.valueAsDate,
+        documentNumber: documentNumberInput.value,
+        documentExpirationDate: documentExpirationDateInput.valueAsDate,
+        phoneCountry: phoneCountryInput.value,
+        restPhoneNumber: restPhoneNumberInput.value,
+        email: emailInput.value
     };
 
     if (searchParameters.directions.length === 0) {
@@ -102,7 +159,6 @@ setUIEnabled(true);
 async function start(): Promise<void> {
     const initialSettings = await contracts.getSettings();
 
-    debugger;
     fillUI(initialSettings);
 }
 

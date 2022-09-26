@@ -19,7 +19,7 @@ export function injectScript(webContents: WebContents, uri: string): void {
 
             webContents.executeJavaScript(`
                 const po = document.createElement('script');
-                po.text = \`${scriptData}\`;
+                po.text = \`${scriptData.replace('`','\\`')}\`;
                 document.body.appendChild(po);
             `);
 
@@ -62,7 +62,19 @@ export async function getStoredSettings(): Promise<ITicketSearchParameters> {
             dateTo: new Date(),
             directions: [{ from: 'MSQ', to: 'BUS' }, { from: 'MSQ', to: 'IST' }],
             delayMin: 1000,
-            delayMax: 2000
+            delayMax: 2000,
+            autoFill: false,
+            aproveTillPayment: false,
+            passengerTitle: "Mr.",
+            lastName: "",
+            firstName: "",
+            nationality: "Российская Федерация",
+            dateOfBirth: undefined,
+            documentNumber: "",
+            documentExpirationDate: undefined,
+            phoneCountry: "(+7) Российская Федерация",
+            restPhoneNumber: "",
+            email: ""
         }
 
         return defaultParameters;
@@ -74,6 +86,12 @@ export async function getStoredSettings(): Promise<ITicketSearchParameters> {
 
     parsedConfig.dateTo = new Date(parsedConfig.dateTo);
     parsedConfig.dateFrom = new Date(parsedConfig.dateFrom);
+
+    if ((parsedConfig.dateOfBirth as unknown as string)?.length > 0)
+        parsedConfig.dateOfBirth = new Date(parsedConfig.dateOfBirth);
+
+    if ((parsedConfig.documentExpirationDate as unknown as string)?.length > 0)
+        parsedConfig.documentExpirationDate = new Date(parsedConfig.documentExpirationDate);
 
     return parsedConfig;
 }

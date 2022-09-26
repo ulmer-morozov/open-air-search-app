@@ -52,7 +52,7 @@ const createWindow = async (): Promise<void> => {
   controlsView.setBounds({ x: 0, y: windowGap, width: controlsWidth, height: windowHeight - windowGap })
   controlsView.setAutoResize({ width: true, height: true });
 
-  controlsView.webContents.openDevTools({ mode: 'detach' });
+  // controlsView.webContents.openDevTools({ mode: 'detach' });
   controlsView.webContents.loadURL(CONTROLS_WEBPACK_ENTRY);
 
   const belaviaHandler = new BelaviaHandler();
@@ -83,15 +83,15 @@ const createWindow = async (): Promise<void> => {
 
   ipcMain.handle('search-tickets', async (_event, sp: ITicketSearchParameters) => {
     console.log(sp);
+    
     ticketSearchParameters = sp;
+    await storeSettings(ticketSearchParameters);
 
     currentDate.setTime(sp.dateFrom.getTime());
 
     const direction = ticketSearchParameters.directions[directionIndex];
 
     findTickets(direction.from, direction.to, currentDate);
-
-    await storeSettings(ticketSearchParameters);
   });
 
   ipcMain.handle('search-tickets-stop', () => {
