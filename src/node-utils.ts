@@ -11,27 +11,27 @@ const writeFile = util.promisify(fs.writeFile);
 const configPath = path.join(os.homedir(), 'Desktop', 'air-search-app.json');
 
 export function injectScript(webContents: WebContents, uri: string): void {
-    if (uri.startsWith('file://')) {
-        try {
-            const scriptData = fs.readFileSync(uri.replace('file://', ''), { encoding: 'utf-8' });
+    // if (uri.startsWith('file://')) {
+    //     try {
+    //         const scriptData = fs.readFileSync(uri.replace('file://', ''), { encoding: 'utf-8' });
 
-            console.log(scriptData);
+    //         // переносы строки нужны, чтобы убрать влияние комментариев
+    //         const script = "document.body.appendChild(`<script>\n" + scriptData.replace(/`/g,'\\`') + "\n</script>`)";
+    //         console.log('\n\n\n');
+    //         console.log(script);
+    //         console.log('\n\n\n');
 
-            webContents.executeJavaScript(`
-                const po = document.createElement('script');
-                po.text = \`${scriptData.replace('`','\\`')}\`;
-                document.body.appendChild(po);
-            `);
+    //         webContents.executeJavaScript(script);
 
-            return;
-        }
+    //         return;
+    //     }
 
-        catch (e) {
-            console.error(e);
+    //     catch (e) {
+    //         console.error(e);
 
-            throw e;
-        }
-    }
+    //         throw e;
+    //     }
+    // }
 
     webContents.executeJavaScript(`
         (function() {

@@ -79,8 +79,9 @@ async function processApiResponse(url: string, requestData: Document | XMLHttpRe
             (window as any).contracts.onTickets(tickets.length);
             return;
         }
+        
 
-        await sleep(200);
+        await sleep(100);
 
         (window as any).ticketFoundHandler(tickets.length);
     }

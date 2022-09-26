@@ -26,7 +26,8 @@ export class BelaviaHandler implements IAviaHandler {
         this.view = new BrowserView({
             webPreferences: {
                 preload: BELAVIA_PRELOAD_WEBPACK_ENTRY,
-                contextIsolation: false
+                contextIsolation: false,
+                webSecurity: false
             }
         });
 

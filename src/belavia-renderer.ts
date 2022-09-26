@@ -11,7 +11,6 @@ console.log(`👋 Попробуем найти билетики!`);
 let snd: HTMLAudioElement | undefined;
 
 document.addEventListener('keydown', () => stopAudioSignal());
-document.addEventListener('click', () => stopAudioSignal());
 
 function stopAudioSignal(): void {
     if (snd === undefined || snd === null)
@@ -46,9 +45,6 @@ function toDD_MM_YYYY(date: Date): string {
     return `${dateFormatted}.${monthFormatted}.${date.getFullYear()}`;
 }
 
-
-
-(window as any).ticketFoundHandler = ticketFoundHandler;
 
 async function ticketFoundHandler(ticketCount: number): Promise<void> {
     snd = beep();
@@ -156,3 +152,5 @@ async function ticketFoundHandler(ticketCount: number): Promise<void> {
     if (settings.aproveTillPayment)
         querySelector('form button[type=submit]').click();
 }
+
+(window as any).ticketFoundHandler = ticketFoundHandler;
