@@ -34,6 +34,10 @@ function chooseSelector(inputId: string, etalonStartText: string): void {
         throw new Error(`To many (${variants.length}) variant found with text ${etalonStartText} for input with id ${inputId}`);
 
     variants[0].click();
+
+    console.log(`Заполнено [${inputId}]`);
+    console.log(variants[0].innerText);
+    console.log('');
 }
 
 function toUTC_DD_MM_YYYY(date: Date): string {
@@ -154,9 +158,9 @@ async function ticketFoundHandler(ticketCount: number): Promise<void> {
     if (settings.aproveTillPayment)
         querySelector('form button[type=submit]').click();
 
-    await sleep(2000);
+    // await sleep(2000);
 
-    ((window as any).contracts as IBelaviaPreloadContracts).openUrlInBrowser(window.location.href);
+    // ((window as any).contracts as IBelaviaPreloadContracts).openUrlInBrowser(window.location.href);
 }
 
 (window as any).ticketFoundHandler = ticketFoundHandler;

@@ -84,4 +84,8 @@ export function setNativeValue(element: HTMLInputElement, value: string): void {
         tracker.setValue(lastValue);
     }
     element.dispatchEvent(event);
+
+    console.log(`Заполнено [${element.id}]`);
+    console.log(value);
+    console.log('');
 }
