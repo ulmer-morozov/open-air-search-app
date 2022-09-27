@@ -1,4 +1,4 @@
-import { ipcRenderer } from 'electron'
+import { ipcRenderer, shell } from 'electron'
 import { ApiError } from './ApiError';
 import { IBelaviaPreloadContracts } from './IBelaviaPreloadContracts';
 import { TicketResponse } from './TicketResponse';
@@ -10,6 +10,9 @@ import { sleep } from './browser-utils';
     },
     getSettings: () => {
         return ipcRenderer.invoke('get-settings');
+    },
+    openUrlInBrowser: (url: string): void => {
+        shell.openExternal(url);
     }
 } as IBelaviaPreloadContracts;
 
@@ -79,7 +82,6 @@ async function processApiResponse(url: string, requestData: Document | XMLHttpRe
             (window as any).contracts.onTickets(tickets.length);
             return;
         }
-        
 
         await sleep(100);
 

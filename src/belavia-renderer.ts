@@ -151,6 +151,10 @@ async function ticketFoundHandler(ticketCount: number): Promise<void> {
     // нажимаем кнопку далее в разделе оплата
     if (settings.aproveTillPayment)
         querySelector('form button[type=submit]').click();
+
+    await sleep(2000);
+
+    ((window as any).contracts as IBelaviaPreloadContracts).openUrlInBrowser(window.location.href);
 }
 
 (window as any).ticketFoundHandler = ticketFoundHandler;
