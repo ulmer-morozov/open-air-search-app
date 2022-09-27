@@ -39,7 +39,7 @@ window.XMLHttpRequest.prototype.send = function (...sendArguments) {
         const requestJson = sendArguments[0];
         const responseText = this.responseText;
 
-        console.log(`OTHER REQUEST ${request.status}`, url, requestJson, responseText);
+        // console.log(`OTHER REQUEST ${request.status}`, url, requestJson, responseText);
 
         if (request.status >= 300) {
             const error: ApiError = JSON.parse(responseText);
@@ -58,7 +58,7 @@ const proxiedOpen = window.XMLHttpRequest.prototype.open;
 
 (window.XMLHttpRequest.prototype.open as any) = function (...openArguments: Parameters<typeof window.XMLHttpRequest.prototype.open>) {
 
-    console.log('XMLHttpRequest open patched from preload');
+    // console.log('XMLHttpRequest open patched from preload');
     openArgumentsMap.set(this, openArguments);
 
     return proxiedOpen.apply(this, [].slice.call(openArguments));
