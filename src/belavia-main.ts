@@ -27,8 +27,7 @@ export class BelaviaHandler implements IAviaHandler {
         this.view = new BrowserView({
             webPreferences: {
                 preload: BELAVIA_PRELOAD_WEBPACK_ENTRY,
-                contextIsolation: false,
-                webSecurity: false
+                contextIsolation: false
             }
         });
 
@@ -54,7 +53,7 @@ export class BelaviaHandler implements IAviaHandler {
 
         this._lastUrl = `https://ibe.belavia.by/select?journeyType=Ow&journey=${journey}&adults=${serchParameters.adults}&children=${serchParameters.children}&infants=${serchParameters.infants}&lang=ru`;
 
-        console.log(`lastUrl: ${this._lastUrl}`);
+        // console.log(`lastUrl: ${this._lastUrl}`);
 
         this.view.webContents.loadURL(this._lastUrl);
     }

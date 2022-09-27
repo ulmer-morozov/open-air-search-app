@@ -1,4 +1,4 @@
-import { app, BrowserView, BrowserWindow, ipcMain, shell } from 'electron';
+import { app, BrowserView, BrowserWindow, ipcMain, shell, protocol } from 'electron';
 import { BelaviaHandler } from './belavia-main';
 import { getStoredSettings, storeSettings } from './utils-node';
 import { ITicketSearchParameters } from './ITicketSearchParameters';
@@ -111,10 +111,9 @@ const createWindow = async (): Promise<void> => {
       return;
     }
 
-    console.log(`Found tickets ${ticketCount}`);
 
     if (ticketCount > 0) {
-      console.log(`SUCCESS`);
+      console.log(`Found tickets ${ticketCount}`);
       shell.openExternal(belaviaHandler.lastUrl)
       return;
     }
@@ -159,7 +158,18 @@ const createWindow = async (): Promise<void> => {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', createWindow);
+app.on('ready', async () => {
+
+  const result = protocol.registerFileProtocol('webpackfile', (request, callback) => {
+    const url = request.url.replace('webpackfile://', '');
+
+    console.log(`${request.url} --> ${url}`);
+
+    callback({ path: url })
+  });
+
+  await createWindow();
+});
 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
