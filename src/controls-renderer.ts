@@ -118,7 +118,7 @@ function setUIEnabled(enabled: boolean) {
 }
 
 function fillUI(initialSettings: ITicketSearchParameters) {
-    console.log('fill UI', initialSettings);
+    // console.log('fill UI', initialSettings);
 
     dateFromInput.valueAsDate = initialSettings.dateFrom;
     dateToInput.valueAsDate = initialSettings.dateTo;
