@@ -1,4 +1,5 @@
 import { app, BrowserView, BrowserWindow, ipcMain, shell, protocol } from 'electron';
+import path from 'path';
 import { BelaviaHandler } from './belavia-main';
 import { getStoredSettings, storeSettings } from './utils-node';
 import { ITicketSearchParameters } from './ITicketSearchParameters';
@@ -162,10 +163,11 @@ app.on('ready', async () => {
 
   const result = protocol.registerFileProtocol('webpackfile', (request, callback) => {
     const url = request.url.replace('webpackfile://', '');
+    let normalizedUrl = path.normalize(url);
 
-    console.log(`${request.url} --> ${url}`);
+    console.log(`${request.url} --> ${normalizedUrl}`);
 
-    callback({ path: url })
+    callback({ path: normalizedUrl })
   });
 
   await createWindow();

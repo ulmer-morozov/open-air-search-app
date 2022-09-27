@@ -12,10 +12,22 @@ const writeFile = util.promisify(fs.writeFile);
 const configPath = path.join(os.homedir(), 'Desktop', 'air-search-app.json');
 
 export function injectScript(webContents: WebContents, uri: string): void {
+
+    console.log('inject before ' + uri);
+
     // внутренняя схема для файлов
     if (uri.startsWith('file://')) {
         uri = uri.replace('file://', 'webpackfile://')
     }
+
+    if (process.platform === 'win32') {
+        // console.log('win!');
+        path.normalize(uri);
+
+        uri = uri.replace(/\\/g, '/');
+    }
+
+    console.log('inject after ' + uri);
 
     webContents.executeJavaScript(`
         (function() {
