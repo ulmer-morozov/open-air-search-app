@@ -57,6 +57,9 @@ export async function getStoredSettings(): Promise<ITicketSearchParameters> {
         const defaultParameters: ITicketSearchParameters = {
             dateFrom: dateNowUtc(),
             dateTo: dateNowUtc(),
+            adults: 1,
+            children: 0,
+            infants: 0,
             directions: [{ from: 'MSQ', to: 'BUS' }, { from: 'MSQ', to: 'IST' }],
             delayMin: 1000,
             delayMax: 2000,
@@ -80,6 +83,10 @@ export async function getStoredSettings(): Promise<ITicketSearchParameters> {
     const configJson = await readFile(configPath, { encoding: 'utf-8' });
 
     const parsedConfig: ITicketSearchParameters = JSON.parse(configJson);
+
+    parsedConfig.adults ??= 1;
+    parsedConfig.children ??= 0;
+    parsedConfig.infants ??= 0;
 
     parsedConfig.dateTo = new Date(parsedConfig.dateTo);
     parsedConfig.dateFrom = new Date(parsedConfig.dateFrom);

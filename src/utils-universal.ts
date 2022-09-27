@@ -4,7 +4,6 @@ export function dateNowUtc(): Date {
     const date = new Date();
 
     const utcDate = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
-    debugger;
     return utcDate;
 }
 

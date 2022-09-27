@@ -32,7 +32,7 @@ const createWindow = async (): Promise<void> => {
   const windowWidth = 1200;
   const windowHeight = 700;
   const windowGap = 26;
-  const controlsWidth = 1000;
+  const controlsWidth = 200;
 
   const mainWindow = new BrowserWindow({
     width: windowWidth,
@@ -54,7 +54,7 @@ const createWindow = async (): Promise<void> => {
   controlsView.setBounds({ x: 0, y: windowGap, width: controlsWidth, height: windowHeight - windowGap })
   controlsView.setAutoResize({ width: true, height: true });
 
-  controlsView.webContents.openDevTools({ mode: 'right' });
+  controlsView.webContents.openDevTools({ mode: 'detach' });
   controlsView.webContents.loadURL(CONTROLS_WEBPACK_ENTRY);
 
   const belaviaHandler = new BelaviaHandler();
@@ -63,19 +63,19 @@ const createWindow = async (): Promise<void> => {
 
   belaviaHandler.view.setBounds({ x: controlsWidth, y: windowGap, width: windowWidth - controlsWidth, height: windowHeight - windowGap })
   belaviaHandler.view.setAutoResize({ width: true, height: true });
-  // belaviaHandler.view.webContents.openDevTools();
+  belaviaHandler.view.webContents.openDevTools();
 
   // убирает синхронизацию заголовка с <title> страницы html
   mainWindow.on('page-title-updated', (e) => {
     e.preventDefault();
   });
 
-  const findTickets = (airportFrom: string, airportTo: string, date: Date): void => {
+  const findTickets = (airportFrom: string, airportTo: string, date: Date, serchParameters: ITicketSearchParameters): void => {
     if (ticketSearchParameters === undefined)
       return;
 
     // console.log(date.toLocaleDateString());
-    belaviaHandler.findTickets(airportFrom, airportTo, date);
+    belaviaHandler.findTickets(airportFrom, airportTo, date, serchParameters);
     mainWindow.setTitle(`${airportFrom} --> ${airportTo}  | ${date.toLocaleDateString('ru-RU', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}`);
   }
 
@@ -85,7 +85,7 @@ const createWindow = async (): Promise<void> => {
 
   ipcMain.handle('search-tickets', async (_event, sp: ITicketSearchParameters) => {
     console.log(sp);
-    
+
     ticketSearchParameters = sp;
     await storeSettings(ticketSearchParameters);
 
@@ -93,7 +93,7 @@ const createWindow = async (): Promise<void> => {
 
     const direction = ticketSearchParameters.directions[directionIndex];
 
-    findTickets(direction.from, direction.to, currentDate);
+    findTickets(direction.from, direction.to, currentDate, ticketSearchParameters);
   });
 
   ipcMain.handle('search-tickets-stop', () => {
@@ -125,7 +125,7 @@ const createWindow = async (): Promise<void> => {
       const direction = ticketSearchParameters.directions[directionIndex];
 
       await sleep(Math.round((ticketSearchParameters.delayMax - ticketSearchParameters.delayMin) * Math.random() + ticketSearchParameters.delayMin));
-      findTickets(direction.from, direction.to, currentDate);
+      findTickets(direction.from, direction.to, currentDate, ticketSearchParameters);
 
       return;
     }
@@ -152,7 +152,7 @@ const createWindow = async (): Promise<void> => {
 
     const direction = ticketSearchParameters.directions[directionIndex];
     await sleep(Math.round((ticketSearchParameters.delayMax - ticketSearchParameters.delayMin) * Math.random() + ticketSearchParameters.delayMin));
-    findTickets(direction.from, direction.to, currentDate);
+    findTickets(direction.from, direction.to, currentDate, ticketSearchParameters);
   });
 };
 

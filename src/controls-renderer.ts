@@ -4,13 +4,48 @@ import { IControlPreloadContracts } from './IControlPreloadContracts';
 import { ITicketSearchParameters } from './ITicketSearchParameters';
 import { cleanDirections, stringifyDirections, dateNowUtc, parseDirections } from './utils-universal';
 
+export enum FieldType {
+    Number = 'number'
+}
+
+export interface IFieldDescription {
+    name: keyof ITicketSearchParameters;
+    title: string;
+    defaultValue: any;
+    type: FieldType;
+}
+
+export interface IFieldDescriptionGroup {
+    title: string;
+    items: IFieldDescription[];
+}
+
+const fieldGroups: IFieldDescriptionGroup[] = [
+    {
+        title: 'Пассажиры',
+        items: [
+            { name: 'adults', title: 'Кол. взрослых', defaultValue: 1, type: FieldType.Number },
+            { name: 'children', title: 'Кол. детей', defaultValue: 1, type: FieldType.Number },
+            { name: 'infants', title: 'Кол. младенцев', defaultValue: 1, type: FieldType.Number }
+        ]
+    }
+];
+
 declare const contracts: IControlPreloadContracts;
+
+const controlDictionary = new Map<keyof ITicketSearchParameters, HTMLInputElement | HTMLTextAreaElement>();
+const descriptionMap = new Map<keyof ITicketSearchParameters, IFieldDescription>();
+
+// мапа всех описаний
+fieldGroups.forEach(x => x.items.forEach(y => descriptionMap.set(y.name, y)));
+
 
 let isSearching = false;
 
 const searchForm = getElementById('searchForm', HTMLFormElement);
 const stopButton = getElementById('stopButton', HTMLButtonElement);
 const searchButton = getElementById('searchButton', HTMLButtonElement);
+const dynamicFormContainer = getElementById('dynamicFormGroups', HTMLDivElement);
 
 const dateFromInput = getInputById('dateFromInput');
 const dateToInput = getInputById('dateToInput');
@@ -73,6 +108,13 @@ function setUIEnabled(enabled: boolean) {
     setInputEnabled(phoneCountryInput, enabled)
     setInputEnabled(restPhoneNumberInput, enabled)
     setInputEnabled(emailInput, enabled)
+
+    // динамические контролы включить/выключить
+    controlDictionary.forEach(
+        (control) => {
+            setInputEnabled(control, enabled)
+        }
+    );
 }
 
 function fillUI(initialSettings: ITicketSearchParameters) {
@@ -102,6 +144,47 @@ function fillUI(initialSettings: ITicketSearchParameters) {
     phoneCountryInput.value = initialSettings.phoneCountry;
     restPhoneNumberInput.value = initialSettings.restPhoneNumber;
     emailInput.value = initialSettings.email;
+
+    controlDictionary.clear();
+    dynamicFormContainer.innerHTML = '';
+
+    for (let i = 0; i < fieldGroups.length; i++) {
+        const fieldGroup = fieldGroups[i];
+
+        const sectionEl = document.createElement('div');
+        sectionEl.classList.add('form-section');
+        sectionEl.innerHTML = `<h6>${fieldGroup.title}</h6>`;
+
+        dynamicFormContainer.appendChild(sectionEl);
+
+        for (let j = 0; j < fieldGroup.items.length; j++) {
+            const fieldDescription = fieldGroup.items[j];
+
+            const wrapperEl = document.createElement('div');
+            wrapperEl.classList.add('form-group');
+
+            sectionEl.appendChild(wrapperEl);
+
+            const label = document.createElement('label');
+            label.innerText = fieldDescription.title;
+
+            wrapperEl.appendChild(label);
+
+            if (fieldDescription.type !== FieldType.Number)
+                throw new Error('Not implemented! Надо добавить другие типы для динамической генерации формы');
+
+            const numberInput = document.createElement('input');
+            numberInput.id = `gen_${fieldDescription.name}Input`;
+            numberInput.type = 'number';
+            numberInput.name = fieldDescription.name;
+            numberInput.valueAsNumber = initialSettings[fieldDescription.name] as number;
+
+            wrapperEl.appendChild(numberInput);
+
+            controlDictionary.set(fieldDescription.name, numberInput);
+        }
+
+    }
 }
 
 searchForm.onsubmit = (e) => {
@@ -124,7 +207,10 @@ searchForm.onsubmit = (e) => {
         documentExpirationDate: documentExpirationDateInput.valueAsDate,
         phoneCountry: phoneCountryInput.value,
         restPhoneNumber: restPhoneNumberInput.value,
-        email: emailInput.value
+        email: emailInput.value,
+        adults: 0,
+        children: 0,
+        infants: 0
     };
 
     if (searchParameters.directions.length === 0) {
@@ -142,6 +228,19 @@ searchForm.onsubmit = (e) => {
         return
     }
 
+    // соберем данные из динамических компонентов
+    controlDictionary.forEach(
+        (control, key) => {
+            const fieldDescription = descriptionMap.get(key);
+
+            if (fieldDescription.type === FieldType.Number && typeof searchParameters[key] === 'number') {
+                (searchParameters[key] as number) = (control as HTMLInputElement).valueAsNumber;
+            } else {
+                throw new Error('Not implemented! Надо добавить другие типы для динамической генерации формы');
+            }
+        }
+    );
+
     setUIEnabled(false);
 
     isSearching = true;
@@ -153,14 +252,14 @@ stopButton.onclick = () => {
     setUIEnabled(true);
 
     contracts.stopSearch();
+
+    isSearching = false;
 }
 
 setUIEnabled(true);
 
 async function start(): Promise<void> {
     const initialSettings = await contracts.getSettings();
-
-    debugger;
 
     fillUI(initialSettings);
 }

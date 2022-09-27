@@ -131,6 +131,10 @@ async function ticketFoundHandler(ticketCount: number): Promise<void> {
     if (settings.email?.length > 0)
         setNativeValue(getInputById('contact-0.email'), settings.email);
 
+    // дальше не идем, так как форма заполнения данных работает только для одного человека
+    if (settings.adults + settings.children + settings.infants > 1)
+        return;
+
     // нажимаем кнопку покупки
     await sleep(2000);
     querySelector('form button[type=submit]').click();

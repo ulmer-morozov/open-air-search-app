@@ -2,6 +2,7 @@ import { BrowserView } from "electron";
 import { injectScript } from "./utils-node";
 import { IAviaHandler } from './IAviaHandler';
 import { FindTicketsData } from "./FindTicketsData";
+import { ITicketSearchParameters } from './ITicketSearchParameters';
 
 declare const BELAVIA_WEBPACK_ENTRY: string;
 declare const BELAVIA_PRELOAD_WEBPACK_ENTRY: string;
@@ -16,6 +17,8 @@ function formatUTCDate(date: Date): string {
     const dateString = `${date.getUTCFullYear()}${monthFormatted}${dateFormatted}`;
     return dateString;
 }
+
+let count = 0;
 
 export class BelaviaHandler implements IAviaHandler {
     public readonly view: BrowserView;
@@ -48,13 +51,20 @@ export class BelaviaHandler implements IAviaHandler {
         throw new Error("Method not implemented.");
     }
 
-    public findTickets(airportFrom: string, airportTo: string, date: Date): void {
+
+
+    public findTickets(airportFrom: string, airportTo: string, date: Date, serchParameters: ITicketSearchParameters): void {
         const journey = `${airportFrom}${airportTo}${formatUTCDate(date)}`;
 
-        this._lastUrl = `https://ibe.belavia.by/select?journeyType=Ow&journey=${journey}&adults=1&children=0&infants=0&lang=ru`;
+        this._lastUrl = `https://ibe.belavia.by/select?journeyType=Ow&journey=${journey}&adults=${serchParameters.adults}&children=${serchParameters.children}&infants=${serchParameters.infants}&lang=ru`;
 
         console.log(`lastUrl: ${this._lastUrl}`);
 
+        if (count > 1)
+            return;
+
         this.view.webContents.loadURL(this._lastUrl);
+
+        count++;
     }
 }
