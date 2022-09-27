@@ -2,7 +2,7 @@ import { ipcRenderer, shell } from 'electron'
 import { ApiError } from './ApiError';
 import { IBelaviaPreloadContracts } from './IBelaviaPreloadContracts';
 import { TicketResponse } from './TicketResponse';
-import { sleep } from './browser-utils';
+import { sleep } from './utils-universal';
 
 (window as any).contracts = {
     onTickets: (ticketCount) => {

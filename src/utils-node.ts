@@ -4,6 +4,7 @@ import util from 'util';
 import path from 'path';
 import os from 'os';
 import { ITicketSearchParameters } from "./ITicketSearchParameters";
+import { dateNowUtc } from "./utils-universal";
 
 const readFile = util.promisify(fs.readFile);
 const writeFile = util.promisify(fs.writeFile);
@@ -45,10 +46,6 @@ export function injectScript(webContents: WebContents, uri: string): void {
       `);
 }
 
-export function sleep(time: number): Promise<void> {
-    return new Promise((resolve) => setTimeout(resolve, time));
-}
-
 export async function storeSettings(config: ITicketSearchParameters): Promise<void> {
     const configJson = JSON.stringify(config);
 
@@ -58,8 +55,8 @@ export async function storeSettings(config: ITicketSearchParameters): Promise<vo
 export async function getStoredSettings(): Promise<ITicketSearchParameters> {
     if (!fs.existsSync(configPath)) {
         const defaultParameters: ITicketSearchParameters = {
-            dateFrom: new Date(),
-            dateTo: new Date(),
+            dateFrom: dateNowUtc(),
+            dateTo: dateNowUtc(),
             directions: [{ from: 'MSQ', to: 'BUS' }, { from: 'MSQ', to: 'IST' }],
             delayMin: 1000,
             delayMax: 2000,

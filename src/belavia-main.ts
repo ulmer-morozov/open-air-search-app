@@ -1,5 +1,5 @@
 import { BrowserView } from "electron";
-import { injectScript } from "./node-utils";
+import { injectScript } from "./utils-node";
 import { IAviaHandler } from './IAviaHandler';
 import { FindTicketsData } from "./FindTicketsData";
 
@@ -9,11 +9,11 @@ declare const BELAVIA_PRELOAD_WEBPACK_ENTRY: string;
 console.log(`BELAVIA_WEBPACK_ENTRY: ${BELAVIA_WEBPACK_ENTRY}`);
 console.log(`BELAVIA_PRELOAD_WEBPACK_ENTRY: ${BELAVIA_PRELOAD_WEBPACK_ENTRY}`);
 
-function formatDate(date: Date): string {
-    const monthFormatted = (date.getMonth() + 1).toString().padStart(2, '0');
-    const dateFormatted = date.getDate().toString().padStart(2, '0');
+function formatUTCDate(date: Date): string {
+    const monthFormatted = (date.getUTCMonth() + 1).toString().padStart(2, '0');
+    const dateFormatted = date.getUTCDate().toString().padStart(2, '0');
 
-    const dateString = `${date.getFullYear()}${monthFormatted}${dateFormatted}`;
+    const dateString = `${date.getUTCFullYear()}${monthFormatted}${dateFormatted}`;
     return dateString;
 }
 
@@ -49,7 +49,7 @@ export class BelaviaHandler implements IAviaHandler {
     }
 
     public findTickets(airportFrom: string, airportTo: string, date: Date): void {
-        const journey = `${airportFrom}${airportTo}${formatDate(date)}`;
+        const journey = `${airportFrom}${airportTo}${formatUTCDate(date)}`;
 
         this._lastUrl = `https://ibe.belavia.by/select?journeyType=Ow&journey=${journey}&adults=1&children=0&infants=0&lang=ru`;
 

@@ -1,7 +1,8 @@
-import { getInputById, getTextareaById, cleanDirections, getElementById, parseDirections, stringifyDirections } from './browser-utils';
+import { getInputById, getTextareaById, getElementById } from './utils-browser';
 import "./controls.scss";
 import { IControlPreloadContracts } from './IControlPreloadContracts';
 import { ITicketSearchParameters } from './ITicketSearchParameters';
+import { cleanDirections, stringifyDirections, dateNowUtc, parseDirections } from './utils-universal';
 
 declare const contracts: IControlPreloadContracts;
 
@@ -107,8 +108,8 @@ searchForm.onsubmit = (e) => {
     e.preventDefault();
 
     const searchParameters: ITicketSearchParameters = {
-        dateFrom: dateFromInput.valueAsDate ?? new Date(),
-        dateTo: dateToInput.valueAsDate ?? new Date(),
+        dateFrom: dateFromInput.valueAsDate ?? dateNowUtc(),
+        dateTo: dateToInput.valueAsDate ?? dateNowUtc(),
         directions: parseDirections(directionsTextArea.value),
         delayMin: waitTimeFromInput.valueAsNumber,
         delayMax: waitTimeToInput.valueAsNumber,
@@ -158,6 +159,8 @@ setUIEnabled(true);
 
 async function start(): Promise<void> {
     const initialSettings = await contracts.getSettings();
+
+    debugger;
 
     fillUI(initialSettings);
 }

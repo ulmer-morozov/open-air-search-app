@@ -1,8 +1,6 @@
-import { ApiError } from "./ApiError";
-import { getRequiredElementById, querySelector, sleep, getInputById, setNativeValue, beep } from './browser-utils';
+import { getRequiredElementById, querySelector, getInputById, setNativeValue, beep } from './utils-browser';
 import { IBelaviaPreloadContracts } from "./IBelaviaPreloadContracts";
-import { TicketResponse } from "./TicketResponse";
-import { TicketsRequest } from "./TicketsRequest";
+import { sleep } from './utils-universal';
 
 declare const contracts: IBelaviaPreloadContracts;
 
@@ -38,11 +36,11 @@ function chooseSelector(inputId: string, etalonStartText: string): void {
     variants[0].click();
 }
 
-function toDD_MM_YYYY(date: Date): string {
-    const monthFormatted = (date.getMonth() + 1).toString().padStart(2, '0');
-    const dateFormatted = date.getDate().toString().padStart(2, '0');
+function toUTC_DD_MM_YYYY(date: Date): string {
+    const monthFormatted = (date.getUTCMonth() + 1).toString().padStart(2, '0');
+    const dateFormatted = date.getUTCDate().toString().padStart(2, '0');
 
-    return `${dateFormatted}.${monthFormatted}.${date.getFullYear()}`;
+    return `${dateFormatted}.${monthFormatted}.${date.getUTCFullYear()}`;
 }
 
 
@@ -107,7 +105,7 @@ async function ticketFoundHandler(ticketCount: number): Promise<void> {
 
     // дата рождения
     if (settings.dateOfBirth != undefined)
-        setNativeValue(getInputById('passenger-0.dateOfBirth'), toDD_MM_YYYY(settings.dateOfBirth));
+        setNativeValue(getInputById('passenger-0.dateOfBirth'), toUTC_DD_MM_YYYY(settings.dateOfBirth));
 
     // национальность
     if (settings.nationality?.length > 0)
@@ -119,7 +117,7 @@ async function ticketFoundHandler(ticketCount: number): Promise<void> {
 
     // срок действия
     if (settings.documentExpirationDate != undefined)
-        setNativeValue(getInputById('passenger-0.documentExpirationDate'), toDD_MM_YYYY(settings.documentExpirationDate));
+        setNativeValue(getInputById('passenger-0.documentExpirationDate'), toUTC_DD_MM_YYYY(settings.documentExpirationDate));
 
     // Код страны телефона
     if (settings.phoneCountry?.length > 0)
