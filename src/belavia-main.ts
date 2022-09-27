@@ -18,8 +18,6 @@ function formatUTCDate(date: Date): string {
     return dateString;
 }
 
-let count = 0;
-
 export class BelaviaHandler implements IAviaHandler {
     public readonly view: BrowserView;
 
@@ -51,8 +49,6 @@ export class BelaviaHandler implements IAviaHandler {
         throw new Error("Method not implemented.");
     }
 
-
-
     public findTickets(airportFrom: string, airportTo: string, date: Date, serchParameters: ITicketSearchParameters): void {
         const journey = `${airportFrom}${airportTo}${formatUTCDate(date)}`;
 
@@ -60,11 +56,6 @@ export class BelaviaHandler implements IAviaHandler {
 
         console.log(`lastUrl: ${this._lastUrl}`);
 
-        if (count > 1)
-            return;
-
         this.view.webContents.loadURL(this._lastUrl);
-
-        count++;
     }
 }
