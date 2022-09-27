@@ -1,9 +1,37 @@
+$scrollWidth: 6px;
+$containerPadding: 8px;
+$windowWidth: 220px;
+
 body {
     font-family: 'Roboto Mono', monospace;
     color: #eee;
     overflow-y: scroll;
+    width: $windowWidth - $scrollWidth;
+    margin: 0;
+}
 
+::-webkit-scrollbar {
+    height: 12px;
+    width: $scrollWidth;
+    background: #333;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #222;
+    -webkit-border-radius: 1ex;
+    -webkit-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.75);
+}
+
+::-webkit-scrollbar-corner {
+    background: #333;
+}
+
+.container {
+    padding-top: 0;
+    padding-left: $containerPadding;
+    padding-right: $containerPadding + $scrollWidth;
     padding-bottom: 50px;
+    box-sizing: border-box;
 }
 
 h3,
@@ -11,6 +39,12 @@ h6 {
     color: #888;
     margin: 0;
     margin-bottom: 8px;
+}
+
+h3 {
+    color: #5fa6d0;
+    margin-top: 6px;
+    margin-bottom: 16px;
 }
 
 h6 {
@@ -27,15 +61,38 @@ label {
 
 textarea {
     resize: none;
+    width: 100%;
+    box-sizing: border-box;
 
     &#directionsInput {
         height: 50px;
     }
 }
 
+input[type='text'] {
+    width: 100%;
+    box-sizing: border-box;
+}
+
 form {
     .form-section {
         margin-bottom: 14px;
+
+        &.passengers-type {
+            display: flex;
+
+            .form-group {
+                flex: 1;
+
+                input {
+                    width: 100%;
+                    width: 100%;
+                    min-width: 100%;
+                    max-width: 100%;
+                    box-sizing: border-box;
+                }
+            }
+        }
     }
 
     .form-group {
@@ -63,9 +120,34 @@ form {
     }
 }
 
-#searchButton {
+button.main {
     display: block;
-    // width: 80%;
+    // width: 100%;
     padding: 10px 20px;
     box-sizing: border-box;
+
+    width: 100%;
+    color: white;
+    border: none;
+    cursor: pointer;
+
+    &[hidden] {
+        display: none;
+    }
+
+    &#searchButton {
+        background: #208a20;
+
+        &:hover {
+            background: #3fbe3f;
+        }
+    }
+
+    &#stopButton {
+        background: crimson;
+
+        &:hover {
+            background: #e84866;
+        }
+    }
 }

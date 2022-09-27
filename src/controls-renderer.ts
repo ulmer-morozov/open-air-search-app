@@ -17,16 +17,18 @@ export interface IFieldDescription {
 
 export interface IFieldDescriptionGroup {
     title: string;
+    name: string;
     items: IFieldDescription[];
 }
 
 const fieldGroups: IFieldDescriptionGroup[] = [
     {
-        title: 'Пассажиры',
+        title: '',
+        name: 'passengers-type',
         items: [
-            { name: 'adults', title: 'Кол. взрослых', defaultValue: 1, type: FieldType.Number },
-            { name: 'children', title: 'Кол. детей', defaultValue: 1, type: FieldType.Number },
-            { name: 'infants', title: 'Кол. младенцев', defaultValue: 1, type: FieldType.Number }
+            { name: 'adults', title: 'Взрослых', defaultValue: 1, type: FieldType.Number },
+            { name: 'children', title: 'Детей', defaultValue: 1, type: FieldType.Number },
+            { name: 'infants', title: 'Младенцев', defaultValue: 1, type: FieldType.Number }
         ]
     }
 ];
@@ -152,8 +154,10 @@ function fillUI(initialSettings: ITicketSearchParameters) {
         const fieldGroup = fieldGroups[i];
 
         const sectionEl = document.createElement('div');
-        sectionEl.classList.add('form-section');
-        sectionEl.innerHTML = `<h6>${fieldGroup.title}</h6>`;
+        sectionEl.classList.add('form-section', fieldGroup.name);
+
+        if (fieldGroup.title?.length > 0)
+            sectionEl.innerHTML = `<h6>${fieldGroup.title}</h6>`;
 
         dynamicFormContainer.appendChild(sectionEl);
 

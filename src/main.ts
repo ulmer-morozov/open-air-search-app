@@ -32,8 +32,10 @@ ipcMain.handle('get-settings', async (): Promise<ITicketSearchParameters> => {
 const createWindow = async (): Promise<void> => {
   const windowWidth = 1200;
   const windowHeight = 700;
-  const windowGap = 26;
-  const controlsWidth = 200;
+  const windowTopGap = process.platform === 'darwin' ? 26 : 2;
+  const windowRightGap = 50;
+  const windowBottomGap = process.platform === 'darwin' ? 0 : 60;
+  const controlsWidth = 220;
 
   const mainWindow = new BrowserWindow({
     width: windowWidth,
@@ -52,8 +54,8 @@ const createWindow = async (): Promise<void> => {
 
   mainWindow.addBrowserView(controlsView);
 
-  controlsView.setBounds({ x: 0, y: windowGap, width: controlsWidth, height: windowHeight - windowGap })
-  controlsView.setAutoResize({ width: true, height: true });
+  controlsView.setBounds({ x: 0, y: windowTopGap, width: controlsWidth, height: windowHeight - windowTopGap - windowBottomGap })
+  controlsView.setAutoResize({ width: false, height: true });
 
   // controlsView.webContents.openDevTools({ mode: 'detach' });
   controlsView.webContents.loadURL(CONTROLS_WEBPACK_ENTRY);
@@ -62,7 +64,7 @@ const createWindow = async (): Promise<void> => {
 
   mainWindow.addBrowserView(belaviaHandler.view)
 
-  belaviaHandler.view.setBounds({ x: controlsWidth, y: windowGap, width: windowWidth - controlsWidth, height: windowHeight - windowGap })
+  belaviaHandler.view.setBounds({ x: controlsWidth, y: windowTopGap, width: windowWidth - controlsWidth - windowRightGap, height: windowHeight - windowTopGap - windowBottomGap })
   belaviaHandler.view.setAutoResize({ width: true, height: true });
   belaviaHandler.view.webContents.openDevTools();
 
@@ -154,6 +156,8 @@ const createWindow = async (): Promise<void> => {
     await sleep(Math.round((ticketSearchParameters.delayMax - ticketSearchParameters.delayMin) * Math.random() + ticketSearchParameters.delayMin));
     findTickets(direction.from, direction.to, currentDate, ticketSearchParameters);
   });
+
+  mainWindow.maximize();
 };
 
 // This method will be called when Electron has finished
