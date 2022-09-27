@@ -8,6 +8,10 @@ export interface ITicketSearchParameters {
     delayMin: number;
     delayMax: number;
 
+    adults: number;
+    children: number;
+    infants: number;
+
     autoFill: boolean;
     aproveTillPayment: boolean;
 

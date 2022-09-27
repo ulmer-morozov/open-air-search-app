@@ -1,7 +1,8 @@
 import { BrowserView } from "electron";
-import { injectScript } from "./node-utils";
+import { injectScript } from "./utils-node";
 import { IAviaHandler } from './IAviaHandler';
 import { FindTicketsData } from "./FindTicketsData";
+import { ITicketSearchParameters } from './ITicketSearchParameters';
 
 declare const BELAVIA_WEBPACK_ENTRY: string;
 declare const BELAVIA_PRELOAD_WEBPACK_ENTRY: string;
@@ -9,11 +10,11 @@ declare const BELAVIA_PRELOAD_WEBPACK_ENTRY: string;
 console.log(`BELAVIA_WEBPACK_ENTRY: ${BELAVIA_WEBPACK_ENTRY}`);
 console.log(`BELAVIA_PRELOAD_WEBPACK_ENTRY: ${BELAVIA_PRELOAD_WEBPACK_ENTRY}`);
 
-function formatDate(date: Date): string {
-    const monthFormatted = (date.getMonth() + 1).toString().padStart(2, '0');
-    const dateFormatted = date.getDate().toString().padStart(2, '0');
+function formatUTCDate(date: Date): string {
+    const monthFormatted = (date.getUTCMonth() + 1).toString().padStart(2, '0');
+    const dateFormatted = date.getUTCDate().toString().padStart(2, '0');
 
-    const dateString = `${date.getFullYear()}${monthFormatted}${dateFormatted}`;
+    const dateString = `${date.getUTCFullYear()}${monthFormatted}${dateFormatted}`;
     return dateString;
 }
 
@@ -26,7 +27,8 @@ export class BelaviaHandler implements IAviaHandler {
         this.view = new BrowserView({
             webPreferences: {
                 preload: BELAVIA_PRELOAD_WEBPACK_ENTRY,
-                contextIsolation: false
+                contextIsolation: false,
+                webSecurity: false
             }
         });
 
@@ -47,10 +49,10 @@ export class BelaviaHandler implements IAviaHandler {
         throw new Error("Method not implemented.");
     }
 
-    public findTickets(airportFrom: string, airportTo: string, date: Date): void {
-        const journey = `${airportFrom}${airportTo}${formatDate(date)}`;
+    public findTickets(airportFrom: string, airportTo: string, date: Date, serchParameters: ITicketSearchParameters): void {
+        const journey = `${airportFrom}${airportTo}${formatUTCDate(date)}`;
 
-        this._lastUrl = `https://ibe.belavia.by/select?journeyType=Ow&journey=${journey}&adults=1&children=0&infants=0&lang=ru`;
+        this._lastUrl = `https://ibe.belavia.by/select?journeyType=Ow&journey=${journey}&adults=${serchParameters.adults}&children=${serchParameters.children}&infants=${serchParameters.infants}&lang=ru`;
 
         console.log(`lastUrl: ${this._lastUrl}`);
 

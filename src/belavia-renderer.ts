@@ -1,8 +1,6 @@
-import { ApiError } from "./ApiError";
-import { getRequiredElementById, querySelector, sleep, getInputById, setNativeValue, beep } from './browser-utils';
+import { getRequiredElementById, querySelector, getInputById, setNativeValue, beep } from './utils-browser';
 import { IBelaviaPreloadContracts } from "./IBelaviaPreloadContracts";
-import { TicketResponse } from "./TicketResponse";
-import { TicketsRequest } from "./TicketsRequest";
+import { sleep } from './utils-universal';
 
 declare const contracts: IBelaviaPreloadContracts;
 
@@ -11,7 +9,6 @@ console.log(`👋 Попробуем найти билетики!`);
 let snd: HTMLAudioElement | undefined;
 
 document.addEventListener('keydown', () => stopAudioSignal());
-document.addEventListener('click', () => stopAudioSignal());
 
 function stopAudioSignal(): void {
     if (snd === undefined || snd === null)
@@ -37,18 +34,19 @@ function chooseSelector(inputId: string, etalonStartText: string): void {
         throw new Error(`To many (${variants.length}) variant found with text ${etalonStartText} for input with id ${inputId}`);
 
     variants[0].click();
+
+    console.log(`Заполнено [${inputId}]`);
+    console.log(variants[0].innerText);
+    console.log('');
 }
 
-function toDD_MM_YYYY(date: Date): string {
-    const monthFormatted = (date.getMonth() + 1).toString().padStart(2, '0');
-    const dateFormatted = date.getDate().toString().padStart(2, '0');
+function toUTC_DD_MM_YYYY(date: Date): string {
+    const monthFormatted = (date.getUTCMonth() + 1).toString().padStart(2, '0');
+    const dateFormatted = date.getUTCDate().toString().padStart(2, '0');
 
-    return `${dateFormatted}.${monthFormatted}.${date.getFullYear()}`;
+    return `${dateFormatted}.${monthFormatted}.${date.getUTCFullYear()}`;
 }
 
-
-
-(window as any).ticketFoundHandler = ticketFoundHandler;
 
 async function ticketFoundHandler(ticketCount: number): Promise<void> {
     snd = beep();
@@ -111,7 +109,7 @@ async function ticketFoundHandler(ticketCount: number): Promise<void> {
 
     // дата рождения
     if (settings.dateOfBirth != undefined)
-        setNativeValue(getInputById('passenger-0.dateOfBirth'), toDD_MM_YYYY(settings.dateOfBirth));
+        setNativeValue(getInputById('passenger-0.dateOfBirth'), toUTC_DD_MM_YYYY(settings.dateOfBirth));
 
     // национальность
     if (settings.nationality?.length > 0)
@@ -123,7 +121,7 @@ async function ticketFoundHandler(ticketCount: number): Promise<void> {
 
     // срок действия
     if (settings.documentExpirationDate != undefined)
-        setNativeValue(getInputById('passenger-0.documentExpirationDate'), toDD_MM_YYYY(settings.documentExpirationDate));
+        setNativeValue(getInputById('passenger-0.documentExpirationDate'), toUTC_DD_MM_YYYY(settings.documentExpirationDate));
 
     // Код страны телефона
     if (settings.phoneCountry?.length > 0)
@@ -136,6 +134,10 @@ async function ticketFoundHandler(ticketCount: number): Promise<void> {
     // Email
     if (settings.email?.length > 0)
         setNativeValue(getInputById('contact-0.email'), settings.email);
+
+    // дальше не идем, так как форма заполнения данных работает только для одного человека
+    if (settings.adults + settings.children + settings.infants > 1)
+        return;
 
     // нажимаем кнопку покупки
     await sleep(2000);
@@ -155,4 +157,10 @@ async function ticketFoundHandler(ticketCount: number): Promise<void> {
     // нажимаем кнопку далее в разделе оплата
     if (settings.aproveTillPayment)
         querySelector('form button[type=submit]').click();
+
+    // await sleep(2000);
+
+    // ((window as any).contracts as IBelaviaPreloadContracts).openUrlInBrowser(window.location.href);
 }
+
+(window as any).ticketFoundHandler = ticketFoundHandler;
