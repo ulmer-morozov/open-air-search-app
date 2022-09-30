@@ -77,10 +77,11 @@ export class TicketSearchManager {
         }
 
         // перебираем направления
-        if (this.currentDirectionIndex < this.currentParameters.directions.length - 1) {
+        if (this.currentDirectionIndex < this.directions.length - 1) {
             this.currentDirectionIndex++;
 
             this.searchTicketsForCurrent();
+            return;
         }
 
         // дошли до последнего направления
