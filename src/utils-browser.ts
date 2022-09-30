@@ -89,3 +89,7 @@ export function setNativeValue(element: HTMLInputElement, value: string): void {
     console.log(value);
     console.log('');
 }
+
+export function toValueOrUndefined<T>(value: T | null): T | undefined {
+    return value === null ? undefined : value;
+}

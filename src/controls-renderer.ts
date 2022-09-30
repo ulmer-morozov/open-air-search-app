@@ -1,4 +1,4 @@
-import { getInputById, getTextareaById, getElementById } from './utils-browser';
+import { getInputById, getTextareaById, getElementById, toValueOrUndefined } from './utils-browser';
 import "./controls.scss";
 import { IControlPreloadContracts } from './IControlPreloadContracts';
 import { ITicketSearchParameters } from './ITicketSearchParameters';
@@ -40,7 +40,6 @@ const descriptionMap = new Map<keyof ITicketSearchParameters, IFieldDescription>
 
 // мапа всех описаний
 fieldGroups.forEach(x => x.items.forEach(y => descriptionMap.set(y.name, y)));
-
 
 let isSearching = false;
 
@@ -138,10 +137,10 @@ function fillUI(initialSettings: ITicketSearchParameters) {
     lastNameInput.value = initialSettings.lastName;
     firstNameInput.value = initialSettings.firstName;
 
-    dateOfBirthInput.valueAsDate = initialSettings.dateOfBirth;
+    dateOfBirthInput.valueAsDate = initialSettings.dateOfBirth ?? null;
     nationalityInput.value = initialSettings.nationality;
     documentNumberInput.value = initialSettings.documentNumber;
-    documentExpirationDateInput.valueAsDate = initialSettings.documentExpirationDate;
+    documentExpirationDateInput.valueAsDate = initialSettings.documentExpirationDate ?? null;
 
     phoneCountryInput.value = initialSettings.phoneCountry;
     restPhoneNumberInput.value = initialSettings.restPhoneNumber;
@@ -206,9 +205,9 @@ searchForm.onsubmit = (e) => {
         lastName: lastNameInput.value,
         firstName: firstNameInput.value,
         nationality: nationalityInput.value,
-        dateOfBirth: dateOfBirthInput.valueAsDate,
+        dateOfBirth: toValueOrUndefined(dateOfBirthInput.valueAsDate),
         documentNumber: documentNumberInput.value,
-        documentExpirationDate: documentExpirationDateInput.valueAsDate,
+        documentExpirationDate: toValueOrUndefined(documentExpirationDateInput.valueAsDate),
         phoneCountry: phoneCountryInput.value,
         restPhoneNumber: restPhoneNumberInput.value,
         email: emailInput.value,
@@ -236,6 +235,9 @@ searchForm.onsubmit = (e) => {
     controlDictionary.forEach(
         (control, key) => {
             const fieldDescription = descriptionMap.get(key);
+
+            if (fieldDescription === undefined || fieldDescription === null)
+                throw new Error(`Field description with key ${key} not found!`);
 
             if (fieldDescription.type === FieldType.Number && typeof searchParameters[key] === 'number') {
                 (searchParameters[key] as number) = (control as HTMLInputElement).valueAsNumber;

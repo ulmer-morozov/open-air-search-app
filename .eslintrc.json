@@ -14,7 +14,8 @@
   ],
   "rules": {
     "no-debugger": "off",
-    "@typescript-eslint/no-this-alias": "off"
+    "@typescript-eslint/no-this-alias": "off",
+    "strict-boolean-expressions": true
   },
   "parser": "@typescript-eslint/parser"
 }

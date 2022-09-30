@@ -53,9 +53,9 @@
               "entryPoints": [
                 {
                   "name": "belavia",
-                  "js": "./src/belavia-renderer.ts",
+                  "js": "./src/vendors/belavia/belavia-renderer.ts",
                   "preload": {
-                    "js": "./src/belavia-preload.ts"
+                    "js": "./src/vendors/belavia/belavia-preload.ts"
                   }
                 },
                 {

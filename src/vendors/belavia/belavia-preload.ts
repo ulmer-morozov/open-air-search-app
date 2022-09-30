@@ -1,8 +1,8 @@
 import { ipcRenderer, shell } from 'electron'
-import { ApiError } from './ApiError';
-import { IBelaviaPreloadContracts } from './IBelaviaPreloadContracts';
-import { TicketResponse } from './TicketResponse';
-import { sleep } from './utils-universal';
+import { ApiError } from '../../ApiError';
+import { IBelaviaPreloadContracts } from '../../IBelaviaPreloadContracts';
+import { TicketResponse } from '../../TicketResponse';
+import { sleep } from '../../utils-universal';
 
 (window as any).contracts = {
     onTickets: (ticketCount) => {
@@ -47,9 +47,11 @@ window.XMLHttpRequest.prototype.send = function (...sendArguments) {
             return;
         }
 
+        // @ts-ignore:next-line
         processApiResponse(url, requestJson, responseText);
     });
 
+    // @ts-ignore:next-line
     return proxiedSend.apply(this, [].slice.call(sendArguments));
 };
 
@@ -57,10 +59,12 @@ window.XMLHttpRequest.prototype.send = function (...sendArguments) {
 const proxiedOpen = window.XMLHttpRequest.prototype.open;
 
 (window.XMLHttpRequest.prototype.open as any) = function (...openArguments: Parameters<typeof window.XMLHttpRequest.prototype.open>) {
-
     // console.log('XMLHttpRequest open patched from preload');
-    openArgumentsMap.set(this, openArguments);
 
+    // @ts-ignore:next-line
+    openArgumentsMap.set((this), openArguments);
+
+    // @ts-ignore:next-line// @ts-ignore:next-line
     return proxiedOpen.apply(this, [].slice.call(openArguments));
 };
 

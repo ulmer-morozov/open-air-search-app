@@ -4,7 +4,8 @@ import util from 'util';
 import path from 'path';
 import os from 'os';
 import { ITicketSearchParameters } from "./ITicketSearchParameters";
-import { dateNowUtc } from "./utils-universal";
+import { dateNowUtc, tryParseDate } from "./utils-universal";
+import { AviaVendor } from "./AviaVendor";
 
 const readFile = util.promisify(fs.readFile);
 const writeFile = util.promisify(fs.writeFile);
@@ -55,7 +56,7 @@ export async function getStoredSettings(): Promise<ITicketSearchParameters> {
             adults: 1,
             children: 0,
             infants: 0,
-            directions: [{ from: 'MSQ', to: 'BUS' }, { from: 'MSQ', to: 'IST' }],
+            directions: [{ from: 'MSQ', to: 'BUS', vendor: AviaVendor.Belavia }, { from: 'MSQ', to: 'IST', vendor: AviaVendor.Belavia }],
             delayMin: 1000,
             delayMax: 2000,
             autoFill: false,
@@ -86,11 +87,8 @@ export async function getStoredSettings(): Promise<ITicketSearchParameters> {
     parsedConfig.dateTo = new Date(parsedConfig.dateTo);
     parsedConfig.dateFrom = new Date(parsedConfig.dateFrom);
 
-    if ((parsedConfig.dateOfBirth as unknown as string)?.length > 0)
-        parsedConfig.dateOfBirth = new Date(parsedConfig.dateOfBirth);
-
-    if ((parsedConfig.documentExpirationDate as unknown as string)?.length > 0)
-        parsedConfig.documentExpirationDate = new Date(parsedConfig.documentExpirationDate);
+    parsedConfig.dateOfBirth = tryParseDate(parsedConfig.dateOfBirth);
+    parsedConfig.documentExpirationDate = tryParseDate(parsedConfig.documentExpirationDate);
 
     return parsedConfig;
 }

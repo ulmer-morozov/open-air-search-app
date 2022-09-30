@@ -1,6 +1,6 @@
-import { getRequiredElementById, querySelector, getInputById, setNativeValue, beep } from './utils-browser';
-import { IBelaviaPreloadContracts } from "./IBelaviaPreloadContracts";
-import { sleep } from './utils-universal';
+import { getRequiredElementById, querySelector, getInputById, setNativeValue, beep } from '../../utils-browser';
+import { IBelaviaPreloadContracts } from "../../IBelaviaPreloadContracts";
+import { sleep } from '../../utils-universal';
 
 declare const contracts: IBelaviaPreloadContracts;
 
@@ -24,7 +24,7 @@ function chooseSelector(inputId: string, etalonStartText: string): void {
     const input = getRequiredElementById(inputId);
     input.click();
 
-    let variants: HTMLLIElement[] = Array.from(input.parentElement.parentElement.querySelectorAll('ul li'));
+    let variants: HTMLLIElement[] = Array.from(input.parentElement!.parentElement!.querySelectorAll('ul li'));
     variants = variants.filter(x => x.innerText.toLowerCase().startsWith(etalonStartText.toLowerCase()));
 
     if (variants.length === 0)
