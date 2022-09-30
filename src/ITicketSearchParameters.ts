@@ -26,3 +26,28 @@ export interface ITicketSearchParameters {
     restPhoneNumber: string;
     email: string;
 }
+
+export function emptyTicketSearchParameters(): ITicketSearchParameters {
+    return {
+        dateFrom: new Date(0),
+        dateTo: new Date(0),
+        adults: 0,
+        children: 0,
+        infants: 0,
+        directions: [],
+        delayMin: 0,
+        delayMax: 0,
+        autoFill: false,
+        aproveTillPayment: false,
+        passengerTitle: "",
+        lastName: "",
+        firstName: "",
+        nationality: "",
+        dateOfBirth: undefined,
+        documentNumber: "",
+        documentExpirationDate: undefined,
+        phoneCountry: "",
+        restPhoneNumber: "",
+        email: ""
+    }
+}

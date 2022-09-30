@@ -12,6 +12,9 @@ export function sleep(time: number): Promise<void> {
     return new Promise((resolve) => setTimeout(resolve, time));
 }
 
+export function sleepRandom(delayMin: number, delayMax: number): Promise<void> {
+    return sleep(Math.round((delayMax - delayMin) * Math.random() + delayMin));
+}
 
 export function cleanDirections(text: string): string {
     const directions = parseDirections(text);

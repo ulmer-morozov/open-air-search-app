@@ -2,11 +2,11 @@ import { ipcRenderer, shell } from 'electron'
 import { ApiError } from '../../ApiError';
 import { IBelaviaPreloadContracts } from '../../IBelaviaPreloadContracts';
 import { TicketResponse } from '../../TicketResponse';
-import { sleep } from '../../utils-universal';
+import { ITicketFoundData } from '../../ITicketFoundData';
 
 (window as any).contracts = {
-    onTickets: (ticketCount) => {
-        ipcRenderer.invoke('on-tickets', ticketCount);
+    onTickets: (data: ITicketFoundData) => {
+        ipcRenderer.invoke('on-tickets', data);
     },
     getSettings: () => {
         return ipcRenderer.invoke('get-settings');
@@ -69,26 +69,11 @@ const proxiedOpen = window.XMLHttpRequest.prototype.open;
 };
 
 async function processApiResponse(url: string, requestData: Document | XMLHttpRequestBodyInit | null, responseData: string): Promise<void> {
-    // console.log('processApiResponse');
 
     if (url != undefined && url.includes('/api/dc/products/air/search/') && typeof requestData === 'string') {
-        // const ticketsRequest: TicketsRequest = JSON.parse(requestData);
         const ticketsResponse: TicketResponse = JSON.parse(responseData);
 
         const tickets = ticketsResponse.unbundledOffers?.flat() ?? [];
-
-        console.log(`Найдено билетов: ${tickets.length}`);
-
-        // contracts.onTickets(tickets.length);
-
-        if (tickets.length === 0) {
-            // идем дальше
-            (window as any).contracts.onTickets(tickets.length);
-            return;
-        }
-
-        await sleep(100);
-
         (window as any).ticketFoundHandler(tickets.length);
     }
 }

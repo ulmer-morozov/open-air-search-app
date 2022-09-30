@@ -7,7 +7,7 @@ const contracts: IControlPreloadContracts = {
         return ipcRenderer.invoke('get-settings');
     },
     searchTickets: (pars: ITicketSearchParameters): void => {
-        ipcRenderer.invoke('search-tickets', pars);
+        ipcRenderer.invoke('search-tickets-start', pars);
     },
     stopSearch: (): void => {
         ipcRenderer.invoke('search-tickets-stop');

@@ -1,6 +1,7 @@
 import { getRequiredElementById, querySelector, getInputById, setNativeValue, beep } from '../../utils-browser';
 import { IBelaviaPreloadContracts } from "../../IBelaviaPreloadContracts";
 import { sleep } from '../../utils-universal';
+import { AviaVendor } from '../../AviaVendor';
 
 declare const contracts: IBelaviaPreloadContracts;
 
@@ -49,15 +50,27 @@ function toUTC_DD_MM_YYYY(date: Date): string {
 
 
 async function ticketFoundHandler(ticketCount: number): Promise<void> {
+    console.log(`Найдено билетов: ${ticketCount}`);
+
+    contracts.onTickets({ count: ticketCount, vendor: AviaVendor.Belavia });
+
+    if (ticketCount === 0)
+        return;
+
+    // билеты найдены
     snd = beep();
 
     const settings = await contracts.getSettings();
 
-    if (!settings.autoFill) {
-        // вопим и всё
-        contracts.onTickets(ticketCount);
+    // небольшая задержка
+    await sleep(1000);
+
+    debugger;
+
+    if (!settings.autoFill)
         return;
-    }
+    
+
 
     // выставим русские рубли сначала
     const currencyDiv = getRequiredElementById('currency');

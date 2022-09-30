@@ -3,9 +3,19 @@ import { injectScript } from "../../utils-node";
 import { IAviaWindowHandler } from "../../IAviaWindowHandler";
 import { ITicketSearchParameters } from '../../ITicketSearchParameters';
 import { controlsWindowWidth, sateliteWindowWidth, sateliteWindowWidthMax } from "../../constants";
-import { BELAVIA_PRELOAD_WEBPACK_ENTRY, BELAVIA_WEBPACK_ENTRY, formatUTCDate } from "./belavia-main";
+import { BELAVIA_PRELOAD_WEBPACK_ENTRY, BELAVIA_WEBPACK_ENTRY } from "./belavia-main";
+import { AviaVendor } from "../../AviaVendor";
+
+function formatUTCDate(date: Date): string {
+    const monthFormatted = (date.getUTCMonth() + 1).toString().padStart(2, '0');
+    const dateFormatted = date.getUTCDate().toString().padStart(2, '0');
+
+    const dateString = `${date.getUTCFullYear()}${monthFormatted}${dateFormatted}`;
+    return dateString;
+}
 
 export class BelaviaWindowHandler implements IAviaWindowHandler {
+    public readonly vendor = AviaVendor.Belavia;
     public readonly win: BrowserWindow;
 
     private _lastUrl = '';
@@ -20,6 +30,11 @@ export class BelaviaWindowHandler implements IAviaWindowHandler {
                 preload: BELAVIA_PRELOAD_WEBPACK_ENTRY,
                 contextIsolation: false
             }
+        });
+
+        // убирает синхронизацию заголовка с <title> страницы html
+        this.win.on('page-title-updated', (e) => {
+            e.preventDefault();
         });
 
         const webContents = this.win.webContents;
@@ -39,7 +54,7 @@ export class BelaviaWindowHandler implements IAviaWindowHandler {
         return this._lastUrl;
     }
 
-    public findTickets(airportFrom: string, airportTo: string, date: Date, serchParameters: ITicketSearchParameters): void {
+    public searchTickets(airportFrom: string, airportTo: string, date: Date, serchParameters: ITicketSearchParameters): void {
         const journey = `${airportFrom}${airportTo}${formatUTCDate(date)}`;
 
         this._lastUrl = `https://ibe.belavia.by/select?journeyType=Ow&journey=${journey}&adults=${serchParameters.adults}&children=${serchParameters.children}&infants=${serchParameters.infants}&lang=ru`;
