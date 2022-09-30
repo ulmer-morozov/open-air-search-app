@@ -1,5 +1,0 @@
-export declare const BELAVIA_WEBPACK_ENTRY: string;
-export declare const BELAVIA_PRELOAD_WEBPACK_ENTRY: string;
-
-console.log(`BELAVIA_WEBPACK_ENTRY: ${BELAVIA_WEBPACK_ENTRY}`);
-console.log(`BELAVIA_PRELOAD_WEBPACK_ENTRY: ${BELAVIA_PRELOAD_WEBPACK_ENTRY}`);

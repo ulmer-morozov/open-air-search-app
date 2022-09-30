@@ -3,8 +3,13 @@ import { injectScript } from "../../utils-node";
 import { IAviaWindowHandler } from "../../IAviaWindowHandler";
 import { ITicketSearchParameters } from '../../ITicketSearchParameters';
 import { controlsWindowWidth, sateliteWindowWidth, sateliteWindowWidthMax } from "../../constants";
-import { BELAVIA_PRELOAD_WEBPACK_ENTRY, BELAVIA_WEBPACK_ENTRY } from "./belavia-main";
 import { AviaVendor } from "../../AviaVendor";
+
+declare const BELAVIA_WEBPACK_ENTRY: string;
+declare const BELAVIA_PRELOAD_WEBPACK_ENTRY: string;
+
+console.log(`BELAVIA_WEBPACK_ENTRY: ${BELAVIA_WEBPACK_ENTRY}`);
+console.log(`BELAVIA_PRELOAD_WEBPACK_ENTRY: ${BELAVIA_PRELOAD_WEBPACK_ENTRY}`);
 
 function formatUTCDate(date: Date): string {
     const monthFormatted = (date.getUTCMonth() + 1).toString().padStart(2, '0');

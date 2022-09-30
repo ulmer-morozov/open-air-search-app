@@ -120,6 +120,10 @@ export class TicketSearchManager {
 
         await sleepRandom(this.currentParameters.delayMin, this.currentParameters.delayMax);
 
+        // если за это время уже вырубили поиск, то не открываем ничего
+        if (this._status == TicketSearchManagerStatus.Searching)
+            return;
+
         this._windowHandler.searchTickets(direction.from, direction.to, this.currentDate, this.currentParameters);
     }
 
