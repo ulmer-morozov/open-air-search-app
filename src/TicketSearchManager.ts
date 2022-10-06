@@ -64,7 +64,7 @@ export class TicketSearchManager {
         }
 
         // очищаем страницу
-        this._windowHandler.win.webContents.loadURL("<p>поиск не активен</p>");
+        this._windowHandler.win.webContents.loadURL("data:text/html;base64,PGgxPi4uLiB3YWl0aW5nPC9oMT4");
 
         this.resetAllParameters();
         this.setStatus(TicketSearchManagerStatus.Stopped);
