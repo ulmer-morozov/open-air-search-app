@@ -3,8 +3,10 @@ import { ApiError } from '../../ApiError';
 import { IBelaviaPreloadContracts } from '../../IBelaviaPreloadContracts';
 import { TicketResponse } from '../../TicketResponse';
 import { ITicketFoundData } from '../../ITicketFoundData';
+import { ITicketBuyErrorData } from "../../ITicketBuyErrorData";
+import { AviaVendor } from '../../AviaVendor';
 
-(window as any).contracts = {
+const internalContracts: IBelaviaPreloadContracts = {
     onTickets: (data: ITicketFoundData) => {
         ipcRenderer.invoke('on-tickets', data);
     },
@@ -13,8 +15,13 @@ import { ITicketFoundData } from '../../ITicketFoundData';
     },
     openUrlInBrowser: (url: string): void => {
         shell.openExternal(url);
+    },
+    onTicketBuyError: (data: ITicketBuyErrorData): void => {
+        ipcRenderer.invoke('on-buy-error', data);
     }
-} as IBelaviaPreloadContracts;
+};
+
+(window as any).contracts = internalContracts;
 
 // contextBridge.exposeInMainWorld('contracts', contracts);
 
@@ -35,7 +42,7 @@ window.XMLHttpRequest.prototype.send = function (...sendArguments) {
         openArgumentsMap.delete(request);
         sendArgumentsMap.delete(request);
 
-        const url = openArguments[1];
+        const url: string = openArguments[1];
         const requestJson = sendArguments[0];
         const responseText = this.responseText;
 
@@ -43,7 +50,18 @@ window.XMLHttpRequest.prototype.send = function (...sendArguments) {
 
         if (request.status >= 300) {
             const error: ApiError = JSON.parse(responseText);
-            console.error(`${error.errorCode}. ${error.status}. ${error.type}. ${error.message}`)
+            console.error(`${error.errorCode}. ${error.status}. ${error.type}. ${error.message}`);
+
+            if (url.startsWith('/api/dc/passengers') && error.errorCode.includes("ERR.SSW.INTERNAL.SERVICE_UNAVAILABLE")) {
+
+                setTimeout(() => {
+                    internalContracts.onTicketBuyError({
+                        vendor: AviaVendor.Belavia,
+                        message: JSON.stringify(error)
+                    });
+                }, 1000);
+            }
+
             return;
         }
 

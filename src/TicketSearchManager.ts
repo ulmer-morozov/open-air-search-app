@@ -58,7 +58,7 @@ export class TicketSearchManager {
     }
 
     public stop(): void {
-        if (this._status !== TicketSearchManagerStatus.Searching) {
+        if (this._status !== TicketSearchManagerStatus.Searching && this._status !== TicketSearchManagerStatus.FoundTickets) {
             console.warn(`Next was valled when status was = ${this._status}`);
             return;
         }
@@ -72,7 +72,7 @@ export class TicketSearchManager {
 
     public next(): void {
         if (this._status !== TicketSearchManagerStatus.Searching) {
-            console.warn(`Next was valled when status was = ${this._status}`);
+            console.error(`Next was valled when status was = ${this._status}`);
             return;
         }
 
@@ -97,6 +97,11 @@ export class TicketSearchManager {
         }
 
         this.searchTicketsForCurrent();
+    }
+
+    public handleBuyError(): void {
+        this._windowHandler.win.webContents.loadURL("data:text/html;base64,PGgxPi4uLiB3YWl0aW5nPC9oMT4");
+        this.setStatus(TicketSearchManagerStatus.Searching);
     }
 
     public ticketsFound(count: number): void {

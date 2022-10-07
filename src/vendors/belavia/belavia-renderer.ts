@@ -1,4 +1,4 @@
-import { getRequiredElementById, querySelector, getInputById, setNativeValue, beep } from '../../utils-browser';
+import { getRequiredElementById, querySelector, getInputById, setNativeValue, beep, querySelectorWait } from '../../utils-browser';
 import { IBelaviaPreloadContracts } from "../../IBelaviaPreloadContracts";
 import { sleep } from '../../utils-universal';
 import { AviaVendor } from '../../AviaVendor';
@@ -63,13 +63,10 @@ async function ticketFoundHandler(ticketCount: number): Promise<void> {
     const settings = await contracts.getSettings();
 
     // небольшая задержка
-    await sleep(1000);
-
-    debugger;
+    // await sleep(1000);
 
     if (!settings.autoFill)
         return;
-    
 
 
     // выставим русские рубли сначала
@@ -89,22 +86,42 @@ async function ticketFoundHandler(ticketCount: number): Promise<void> {
     }
     else {
         querySelector('.ui-dropdown-menu button.close').click();
-        await sleep(50);
+        // await sleep(50);
     }
 
     // нажимаем купить первый попавшийся тариф эконом/бизнес
-    await sleep(500);
-    querySelector('.offer .cabin:not(.no-price)').click();
+    // await sleep(500);
+    // querySelector('.offer .cabin:not(.no-price)').click();
+
+    await querySelectorWait('.offer .cabin:not(.no-price)');
+
+    const offerCabins: HTMLElement[] = Array.from(document.querySelectorAll('.offer .cabin:not(.no-price)'));
+
+    const economs = offerCabins.filter(x => x.innerText.toLowerCase().startsWith('эконом'));
+    const buisinesses = offerCabins.filter(x => x.innerText.toLowerCase().startsWith('бизнес'));
+
+    const latestArray: HTMLElement[] = [];
+
+    latestArray.push(...buisinesses);
+    latestArray.push(...economs);
+
+    if (latestArray.length === 0)
+        throw new Error(`оферов нет( лезем в отладку`)
+
+    // мне нужен был последний эконом)
+    // тут можно сделать первый бизнес например
+    const latest = latestArray[latestArray.length - 1];
+
+    latest.click();
 
     // выбираем тариф ещё раз
-    await sleep(1000);
-    querySelector('.offer-item .brands .brand').click();
+    (await querySelectorWait('.offer-item .brands .brand')).click();
 
     // нажимаем кнопку покупки
-    await sleep(2000);
-    querySelector('form button[type=submit]').click();
+    (await querySelectorWait('form button[type=submit]')).click();
 
-    await sleep(1000);
+    // await sleep(5000);
+    await querySelectorWait('[id="passenger-0.title"]');
 
     // переходим к форме
 
@@ -153,23 +170,24 @@ async function ticketFoundHandler(ticketCount: number): Promise<void> {
         return;
 
     // нажимаем кнопку покупки
-    await sleep(2000);
-    querySelector('form button[type=submit]').click();
+    await sleep(100);
+    (await querySelectorWait('.passengers form button[type=submit]')).click();
 
     // нажимаем кнопку далее в разделе услуги
-    await sleep(5000);
-    querySelector('form button[type=submit]').click();
+    await sleep(1000);
+    (await querySelectorWait('.ancillaries form .cart button[type=submit]')).click();
 
     // Оплата банковской картой
-    await sleep(2000);
-    getRequiredElementById('paymentType_QQ_105').click()
+    await sleep(100);
+    (await querySelectorWait('[id="paymentType_QQ_105"]')).click();
 
     // Ознакомились с условиями
-    getRequiredElementById('reviewAcknowledgment').click()
+    await sleep(100);
+    (await querySelectorWait('[id="reviewAcknowledgment"]')).click()
 
     // нажимаем кнопку далее в разделе оплата
     if (settings.aproveTillPayment)
-        querySelector('form button[type=submit]').click();
+        (await querySelectorWait('.review form button[type=submit]')).click();
 
     // await sleep(2000);
 

@@ -1,8 +1,7 @@
 import { AviaVendor } from './AviaVendor';
 
 
-export interface ITicketFoundData {
-  count: number;
+export interface ITicketBuyErrorData {
   vendor: AviaVendor;
+  message: string;
 }
-

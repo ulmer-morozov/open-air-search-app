@@ -2,8 +2,9 @@ import { BrowserWindow } from "electron";
 import { injectScript } from "../../utils-node";
 import { IAviaWindowHandler } from "../../IAviaWindowHandler";
 import { ITicketSearchParameters } from '../../ITicketSearchParameters';
-import { controlsWindowWidth, sateliteWindowWidth, sateliteWindowWidthMax } from "../../constants";
+import { controlsWindowWidth } from "../../constants";
 import { AviaVendor } from "../../AviaVendor";
+import { screen } from "electron";
 
 declare const BELAVIA_WEBPACK_ENTRY: string;
 declare const BELAVIA_PRELOAD_WEBPACK_ENTRY: string;
@@ -26,6 +27,10 @@ export class BelaviaWindowHandler implements IAviaWindowHandler {
     private _lastUrl = '';
 
     constructor() {
+
+        const sateliteWindowWidth = screen.getPrimaryDisplay().size.width - controlsWindowWidth;
+        const sateliteWindowWidthMax = sateliteWindowWidth;
+
         this.win = new BrowserWindow({
             width: sateliteWindowWidth,
             height: 700,

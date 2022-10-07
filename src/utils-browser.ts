@@ -2,6 +2,29 @@ import { sleep } from "./utils-universal";
 
 type Constructor<T> = new (...args: unknown[]) => T;
 
+
+export async function querySelectorWait(selector: string): Promise<HTMLElement> {
+    const maxTime = 15000;
+
+    const startedTime = new Date().getTime();
+    let currentTime = startedTime;
+
+    let element: HTMLElement | null = null;
+
+    while (currentTime - startedTime < maxTime) {
+        currentTime = new Date().getTime();
+
+        element = document.querySelector(selector);
+
+        if (element !== null)
+            return element;
+
+        await sleep(100);
+    }
+
+    throw new Error(`element with selector = ${selector} not found`);
+}
+
 export function querySelector(selector: string): HTMLElement {
     const element = document.querySelector(selector);
 

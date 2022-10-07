@@ -14,7 +14,7 @@ const configPath = path.join(os.homedir(), 'Desktop', 'air-search-app.json');
 
 export function injectScript(webContents: WebContents, uri: string): void {
 
-    console.log('inject before ' + uri);
+    // console.log('inject before ' + uri);
 
     // внутренняя схема для файлов
     if (uri.startsWith('file://')) {
@@ -28,7 +28,7 @@ export function injectScript(webContents: WebContents, uri: string): void {
         uri = uri.replace(/\\/g, '/');
     }
 
-    console.log('inject after ' + uri);
+    // console.log('inject after ' + uri);
 
     webContents.executeJavaScript(`
         (function() {

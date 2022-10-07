@@ -9,6 +9,7 @@ export function dateNowUtc(): Date {
 }
 
 export function sleep(time: number): Promise<void> {
+    console.log(`sleep ${time}`)
     return new Promise((resolve) => setTimeout(resolve, time));
 }
 
